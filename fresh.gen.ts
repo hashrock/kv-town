@@ -4,26 +4,33 @@
 
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/_middleware.tsx";
-import * as $1 from "./routes/auth/oauth2callback.ts";
-import * as $2 from "./routes/auth/signin.ts";
-import * as $3 from "./routes/auth/signout.ts";
-import * as $4 from "./routes/index.tsx";
-import * as $5 from "./routes/memo/[id].tsx";
-import * as $6 from "./routes/memo/index.tsx";
-import * as $7 from "./routes/new.tsx";
+import * as $1 from "./routes/api/listen.ts";
+import * as $2 from "./routes/api/send.ts";
+import * as $3 from "./routes/auth/oauth2callback.ts";
+import * as $4 from "./routes/auth/signin.ts";
+import * as $5 from "./routes/auth/signout.ts";
+import * as $6 from "./routes/index.tsx";
+import * as $7 from "./routes/memo/[id].tsx";
+import * as $8 from "./routes/memo/index.tsx";
+import * as $9 from "./routes/new.tsx";
+import * as $$0 from "./islands/Room.tsx";
 
 const manifest = {
   routes: {
     "./routes/_middleware.tsx": $0,
-    "./routes/auth/oauth2callback.ts": $1,
-    "./routes/auth/signin.ts": $2,
-    "./routes/auth/signout.ts": $3,
-    "./routes/index.tsx": $4,
-    "./routes/memo/[id].tsx": $5,
-    "./routes/memo/index.tsx": $6,
-    "./routes/new.tsx": $7,
+    "./routes/api/listen.ts": $1,
+    "./routes/api/send.ts": $2,
+    "./routes/auth/oauth2callback.ts": $3,
+    "./routes/auth/signin.ts": $4,
+    "./routes/auth/signout.ts": $5,
+    "./routes/index.tsx": $6,
+    "./routes/memo/[id].tsx": $7,
+    "./routes/memo/index.tsx": $8,
+    "./routes/new.tsx": $9,
   },
-  islands: {},
+  islands: {
+    "./islands/Room.tsx": $$0,
+  },
   baseUrl: import.meta.url,
   config,
 };

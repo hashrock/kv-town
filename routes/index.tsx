@@ -7,6 +7,7 @@ import { getUserBySession, listMemo, listRecentlySignedInUsers } from "🛠️/d
 import { Button, ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";
 import { JSX } from "preact";
+import Room from "../islands/Room.tsx";
 
 type Data = SignedInData | null;
 
@@ -68,26 +69,11 @@ function SignedIn(props: SignedInData) {
             Create New
           </LinkButton>
         </div>
-        <ul class="space-y-3 mt-8">
-          {props.memos.map((memo) => {
-            return (
-              <li>
-                <a
-                  class="block bg-white py-6 px-8 shadow rounded hover:shadow-lg transition duration-200 border-l-8 border-gray-400"
-                  href={`/memo/${memo?.id}`}
-                >
-                  <h2 class="text-lg">
-                    {memo?.title}
-                  </h2>
 
-                  <p class="text-sm text-gray-500">
-                    {memo?.body}
-                  </p>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        <div>
+          <Room />
+
+        </div>
       </div>
     </>
   );
