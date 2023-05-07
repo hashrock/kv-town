@@ -108,3 +108,51 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
   }
   return users;
 }
+
+export interface Message {
+  id: string;
+  uid: string;
+  body: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export async function listMessage() {
+  const iter = await kv.list<Message>({ prefix: ["message"] });
+  const message: Message[] = [];
+  for await (const item of iter) {
+    message.push(item.value);
+  }
+  return message;
+}
+
+export async function getMessage(id: string) {
+  const res = await kv.get<Message>(["message", id]);
+  return res.value;
+}
+
+export async function addMessage(uid: string, body: string) {
+  const id = crypto.randomUUID();
+  const message: Message = {
+    id,
+    uid,
+    body,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  await kv.set(["message", id], message);
+  return id;
+}
+
+export async function updateMessage(id: string, uid: string, body: string) {
+  const message = await getMessage(id);
+  if (!memo) throw new Error("message not found");
+  message.uid = uid;
+  message.body = body;
+  message.updatedAt = new Date();
+  await kv.set(["message", id], message);
+}
+
+export async function deleteMessage(id: string) {
+  await kv.delete(["message", id]);
+}
