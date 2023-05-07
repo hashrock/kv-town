@@ -1,6 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { Message } from "../types.ts";
+import { listMessage } from "../utils/db.ts";
 
 interface Avatar {
   x: number;
@@ -19,6 +20,34 @@ export default function Chat(props: { region: string }) {
   const messages = useSignal<Message[]>([]);
 
   useEffect(() => {
+    fetch("/api/message").then((r) => r.json()).then((d_messages) => {
+      d_messages.reverse();
+      d_messages.forEach((message: any) => {
+        const msg: Message = {
+          id: message.id,
+          ts: "0",
+          user: message.uid,
+          body: message.body,
+        };
+        messages.value = [...messages.value, msg];
+      });
+    });
+
+    // listMessage().then((d_messages) => {
+    //   d_messages.reverse();
+    //   d_messages.forEach((message) => {
+    //     const msg: Message = {
+    //       id: message.id,
+    //       ts: "0",
+    //       user: message.uid,
+    //       body: message.body,
+    //     }
+    //     messages.value = [...messages.value, msg];
+    //   }
+    //   );
+    // });
+
+
     const events = new EventSource("/api/listen");
     events.addEventListener(
       "open",

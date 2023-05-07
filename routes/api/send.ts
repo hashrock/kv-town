@@ -1,6 +1,6 @@
 import { Message } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
-import { getUserBySession } from "../../utils/db.ts";
+import { addMessage, getUserBySession } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 interface Data {
   user: User | null;
@@ -26,6 +26,8 @@ export const handler: Handlers<Data, State> = {
 
     channel.postMessage(message);
     channel.close();
+
+    addMessage(message.user, message.body);
 
     return new Response("message sent");
   },
