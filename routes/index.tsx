@@ -72,7 +72,6 @@ function SignedIn(props: SignedInData) {
 
         <div>
           <Room />
-
         </div>
       </div>
     </>

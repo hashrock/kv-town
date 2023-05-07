@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { Message } from "../types.ts";
 
-interface Avatar{
+interface Avatar {
   x: number;
   y: number;
   name: string;
@@ -13,8 +13,6 @@ enum ConnectionState {
   Connected,
   Disconnected,
 }
-
-
 
 export default function Chat(props: { region: string }) {
   const connectionState = useSignal(ConnectionState.Disconnected);

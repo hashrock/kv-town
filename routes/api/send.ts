@@ -1,6 +1,5 @@
 import { Message } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
-import { getCookies } from "$std/http/cookie.ts";
 import { getUserBySession } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 interface Data {
@@ -8,7 +7,6 @@ interface Data {
 }
 export const handler: Handlers<Data, State> = {
   async POST(req, ctx): Promise<Response> {
-    
     const user = await getUserBySession(ctx.state.session ?? "");
     const msg = await req.json();
 
