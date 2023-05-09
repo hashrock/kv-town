@@ -1,12 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
-import { Message } from "../types.ts";
-
-interface Avatar {
-  x: number;
-  y: number;
-  name: string;
-}
+import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 
 enum ConnectionState {
   Connecting,
@@ -45,16 +39,40 @@ export default function Chat() {
       }
     });
     events.addEventListener("message", (e) => {
-      const message = JSON.parse(e.data);
-      messages.value = [...messages.value, message];
+      const message: BroadcastMessage = JSON.parse(e.data);
+      if (message.type === "move") {
+        const payload = message.payload as MoveMesssage;
+        console.log(payload);
+      }
+      if (message.type === "message") {
+        const payload = message.payload as Message;
+        messages.value = [...messages.value, payload];
+      }
     });
     return () => events.close();
   }, []);
+
+  function handleMove() {
+    fetch("/api/move", {
+      method: "POST",
+      body: JSON.stringify({
+        x: Math.floor(Math.random() * 100),
+        y: Math.floor(Math.random() * 100),
+      }),
+    });
+  }
 
   return (
     <div class="w-full">
       <ConnectionStateDisplay state={connectionState} />
       <SendMessageForm />
+
+      <div>
+        <button type="button" onClick={handleMove}>
+          Move
+        </button>
+      </div>
+
       <Messages messages={messages} />
     </div>
   );
