@@ -27,20 +27,6 @@ export default function Chat() {
       });
     });
 
-    // listMessage().then((d_messages) => {
-    //   d_messages.reverse();
-    //   d_messages.forEach((message) => {
-    //     const msg: Message = {
-    //       id: message.id,
-    //       ts: "0",
-    //       user: message.uid,
-    //       body: message.body,
-    //     }
-    //     messages.value = [...messages.value, msg];
-    //   }
-    //   );
-    // });
-
     const events = new EventSource("/api/listen");
     events.addEventListener(
       "open",
@@ -68,7 +54,7 @@ export default function Chat() {
 
   return (
     <div class="w-full">
-      {/* <ConnectionStateDisplay state={connectionState} region={props.region} /> */}
+      <ConnectionStateDisplay state={connectionState} />
       <SendMessageForm />
       <Messages messages={messages} />
     </div>
@@ -77,15 +63,14 @@ export default function Chat() {
 
 interface CSDisplayProps {
   state: Signal<ConnectionState>;
-  region: string;
 }
 
-function ConnectionStateDisplay({ state, region }: CSDisplayProps) {
+function ConnectionStateDisplay({ state }: CSDisplayProps) {
   switch (state.value) {
     case ConnectionState.Connecting:
       return <span>🟡 Connecting...</span>;
     case ConnectionState.Connected:
-      return <span>🟢 Connected to {region}</span>;
+      return <span>🟢 Connected</span>;
     case ConnectionState.Disconnected:
       return <span>🔴 Disconnected</span>;
   }

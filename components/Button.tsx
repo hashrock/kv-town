@@ -24,4 +24,3 @@ background-size: 2000% 100%;
 animation: ${rainbowBackgroundKeyframes} 7s linear infinite;
 color: #fff;
 `;
-
