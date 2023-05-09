@@ -124,7 +124,7 @@ function SendMessageForm() {
 function Messages({ messages }: { messages: Signal<Message[]> }) {
   return (
     <ul>
-      {messages.value.map((msg) => (
+      {messages.value.slice().reverse().map((msg) => (
         <li class="flex gap-2 items-center">
           <span class="font-bold">{msg.username}</span>
           <span>{msg.body}</span>
