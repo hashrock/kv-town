@@ -11,6 +11,7 @@ enum ConnectionState {
 export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
+  const [avatars, setAvatars] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetch("/api/message").then((r) => r.json()).then((d_messages) => {
@@ -42,6 +43,7 @@ export default function Chat() {
       const message: BroadcastMessage = JSON.parse(e.data);
       if (message.type === "move") {
         const payload = message.payload as MoveMesssage;
+
         console.log(payload);
       }
       if (message.type === "message") {
