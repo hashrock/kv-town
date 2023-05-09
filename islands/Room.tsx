@@ -1,7 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { Message } from "../types.ts";
-import { listMessage } from "../utils/db.ts";
 
 interface Avatar {
   x: number;
