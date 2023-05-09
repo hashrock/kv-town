@@ -19,15 +19,16 @@ export const handler: Handlers<Data, State> = {
 
     const message: Message = {
       id: crypto.randomUUID(),
-      ts: new Date().toISOString(),
-      user: user?.name ?? "anonymous",
+      ts: Date.now(),
+      uid: user?.id ?? "anonymous",
+      username: user?.name ?? "anonymous",
       body,
     };
 
     channel.postMessage(message);
     channel.close();
 
-    addMessage(message.user, message.body);
+    addMessage(message.uid, message.username, message.body);
 
     return new Response("message sent");
   },

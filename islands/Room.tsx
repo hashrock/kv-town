@@ -15,21 +15,15 @@ enum ConnectionState {
   Disconnected,
 }
 
-export default function Chat(props: { region: string }) {
+export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
 
   useEffect(() => {
     fetch("/api/message").then((r) => r.json()).then((d_messages) => {
       d_messages.reverse();
-      d_messages.forEach((message: any) => {
-        const msg: Message = {
-          id: message.id,
-          ts: "0",
-          user: message.uid,
-          body: message.body,
-        };
-        messages.value = [...messages.value, msg];
+      d_messages.forEach((message: Message) => {
+        messages.value = [...messages.value, message];
       });
     });
 
@@ -46,7 +40,6 @@ export default function Chat(props: { region: string }) {
     //   }
     //   );
     // });
-
 
     const events = new EventSource("/api/listen");
     events.addEventListener(
@@ -75,7 +68,7 @@ export default function Chat(props: { region: string }) {
 
   return (
     <div class="w-full">
-      <ConnectionStateDisplay state={connectionState} region={props.region} />
+      {/* <ConnectionStateDisplay state={connectionState} region={props.region} /> */}
       <SendMessageForm />
       <Messages messages={messages} />
     </div>
@@ -131,7 +124,7 @@ function Messages({ messages }: { messages: Signal<Message[]> }) {
     <ul>
       {messages.value.map((msg) => (
         <li class="flex gap-2 items-center">
-          <span class="font-bold">{msg.user}</span>
+          <span class="font-bold">{msg.username}</span>
           <span>{msg.body}</span>
         </li>
       ))}

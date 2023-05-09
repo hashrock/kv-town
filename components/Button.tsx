@@ -25,15 +25,3 @@ animation: ${rainbowBackgroundKeyframes} 7s linear infinite;
 color: #fff;
 `;
 
-export function ButtonLinkMovingRainbow(
-  props: JSX.HTMLAttributes<HTMLAnchorElement>,
-) {
-  return (
-    <a
-      {...props}
-      class={tw`px-4 py-2 text-sm font-semibold text-white rounded ${rainbowBackground} ${
-        props.class || ""
-      }`}
-    />
-  );
-}

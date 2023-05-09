@@ -4,6 +4,7 @@
  * synchronization between clients.
  */
 
+import { Message } from "../types.ts";
 import { Memo, OauthSession, User } from "./types.ts";
 
 const kv = await Deno.openKv();
@@ -109,16 +110,11 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
   return users;
 }
 
-export interface Message {
-  id: string;
-  uid: string;
-  body: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export async function listMessage() {
-  const iter = await kv.list<Message>({ prefix: ["message"] });
+  const iter = await kv.list<Message>({ prefix: ["message"] }, {
+    reverse: true,
+    limit: 10,
+  });
   const message: Message[] = [];
   for await (const item of iter) {
     message.push(item.value);
@@ -131,28 +127,28 @@ export async function getMessage(id: string) {
   return res.value;
 }
 
-export async function addMessage(uid: string, body: string) {
+export async function addMessage(uid: string, username: string, body: string) {
   const id = crypto.randomUUID();
+  const ts = Date.now();
   const message: Message = {
     id,
     uid,
+    username,
     body,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    ts,
   };
-  await kv.set(["message", id], message);
+  await kv.set(["message", ts], message);
   return id;
 }
 
-export async function updateMessage(id: string, uid: string, body: string) {
-  const message = await getMessage(id);
-  if (!memo) throw new Error("message not found");
-  message.uid = uid;
-  message.body = body;
-  message.updatedAt = new Date();
-  await kv.set(["message", id], message);
-}
+// export async function updateMessage(id: string, uid: string, body: string) {
+//   const message = await getMessage(id);
+//   if (!message) throw new Error("message not found");
+//   message.uid = uid;
+//   message.body = body;
+//   await kv.set(["message", ts], message);
+// }
 
-export async function deleteMessage(id: string) {
-  await kv.delete(["message", id]);
+export async function deleteMessage(ts: number) {
+  await kv.delete(["message", ts]);
 }

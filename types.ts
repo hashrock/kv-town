@@ -1,6 +1,7 @@
 export interface Message {
   id: string;
-  ts: string;
-  user: string;
+  uid: string;
+  username: string;
   body: string;
+  ts: number;
 }
