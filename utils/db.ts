@@ -158,6 +158,7 @@ export interface Position {
   x: number;
   y: number;
   ts: number;
+  username: string;
 }
 
 export async function updatePosition(position: Position) {

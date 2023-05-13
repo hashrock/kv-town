@@ -43,6 +43,7 @@ export const handler: Handlers<Data, State> = {
       x: x,
       y: y,
       ts,
+      username: user?.name ?? "anonymous",
     });
 
     channel.postMessage(message);

@@ -49,6 +49,7 @@ export default function Chat() {
       if (message.type === "move") {
         const payload = message.payload as MoveMesssage;
         const item: Position = {
+          username: message.username,
           x: payload.x,
           y: payload.y,
           uid: message.uid,
@@ -98,13 +99,13 @@ export default function Chat() {
 function Positions({ positions }: { positions: Record<string, Position> }) {
   return (
     <div>
-      {Object.entries(positions).map(([username, position]) => (
+      {Object.entries(positions).map(([uid, position]) => (
         <div>
-          <span>{username}</span>:
-          <span>{position.x}</span>,
-          <span>{position.y}</span>...
+          <span>{position.username}({uid})</span>:
+          <span>[{position.x}</span>,
+          <span>{position.y}]</span>...
           <span>
-            {position.ts}
+            {Math.round((Date.now() - position.ts) / 1000)}second ago
           </span>
         </div>
       ))}
