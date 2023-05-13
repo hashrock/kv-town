@@ -152,3 +152,23 @@ export async function addMessage(uid: string, username: string, body: string) {
 export async function deleteMessage(ts: number) {
   await kv.delete(["message", ts]);
 }
+
+export interface Position {
+  uid: string;
+  x: number;
+  y: number;
+  ts: number;
+}
+
+export async function updatePosition(position: Position) {
+  await kv.set(["position", position.uid], position);
+}
+
+export async function getPosition() {
+  const iter = await kv.list<Position>({ prefix: ["position"] });
+  const position: { [uid: string]: Position } = {};
+  for await (const item of iter) {
+    position[item.value.uid] = item.value;
+  }
+  return position;
+}

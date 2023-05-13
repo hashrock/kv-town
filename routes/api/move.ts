@@ -1,6 +1,10 @@
 import { BroadcastMessage, Message, MoveMesssage } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
-import { addMessage, getUserBySession } from "../../utils/db.ts";
+import {
+  addMessage,
+  getUserBySession,
+  updatePosition,
+} from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 interface Data {
   user: User | null;
@@ -21,8 +25,10 @@ export const handler: Handlers<Data, State> = {
 
     const channel = new BroadcastChannel("chat");
 
+    const ts = Date.now();
+
     const message: BroadcastMessage = {
-      ts: Date.now(),
+      ts,
       uid: user?.id ?? "anonymous",
       username: user?.name ?? "anonymous",
       payload: {
@@ -31,6 +37,13 @@ export const handler: Handlers<Data, State> = {
       },
       type: "move",
     };
+
+    updatePosition({
+      uid: user?.id ?? "anonymous",
+      x: x,
+      y: y,
+      ts,
+    });
 
     channel.postMessage(message);
     channel.close();

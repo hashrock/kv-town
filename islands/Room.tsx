@@ -1,6 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
+import { Position } from "../utils/db.ts";
 
 enum ConnectionState {
   Connecting,
@@ -11,7 +12,7 @@ enum ConnectionState {
 export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
-  const [avatars, setAvatars] = useState<Record<string, string>>({});
+  const [positions, setPositions] = useState<Record<string, Position>>({});
 
   useEffect(() => {
     fetch("/api/message").then((r) => r.json()).then((d_messages) => {
@@ -19,6 +20,10 @@ export default function Chat() {
       d_messages.forEach((message: Message) => {
         messages.value = [...messages.value, message];
       });
+    });
+
+    fetch("/api/room").then((r) => r.json()).then((d_room) => {
+      setPositions(d_room);
     });
 
     const events = new EventSource("/api/listen");
@@ -43,8 +48,16 @@ export default function Chat() {
       const message: BroadcastMessage = JSON.parse(e.data);
       if (message.type === "move") {
         const payload = message.payload as MoveMesssage;
-
-        console.log(payload);
+        const item: Position = {
+          x: payload.x,
+          y: payload.y,
+          uid: message.uid,
+          ts: message.ts,
+        };
+        setPositions((positions) => ({
+          ...positions,
+          [message.uid]: item,
+        }));
       }
       if (message.type === "message") {
         const payload = message.payload as Message;
@@ -75,7 +88,26 @@ export default function Chat() {
         </button>
       </div>
 
+      <Positions positions={positions} />
+
       <Messages messages={messages} />
+    </div>
+  );
+}
+
+function Positions({ positions }: { positions: Record<string, Position> }) {
+  return (
+    <div>
+      {Object.entries(positions).map(([username, position]) => (
+        <div>
+          <span>{username}</span>:
+          <span>{position.x}</span>,
+          <span>{position.y}</span>...
+          <span>
+            {position.ts}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
