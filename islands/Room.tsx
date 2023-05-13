@@ -101,12 +101,15 @@ function Chara({ x, y }: { x: number; y: number }) {
   const circleRef = useRef<SVGCircleElement>(null);
   useEffect(() => {
     if (circleRef.current) {
-      circleRef.current.animate([
+      const animation = circleRef.current.animate([
         { transform: `translate(${x}px, ${y}px)` },
       ], {
         duration: 1000,
         fill: "forwards",
         easing: "ease-in-out",
+      })
+      animation.finished.then(() => {
+        animation.commitStyles();
       });
     }
   }, [x, y]);
