@@ -35,7 +35,7 @@ export default function Home(props: PageProps<Data>) {
         <title>KV NotePad</title>
       </Head>
       <body class="bg-gray-100">
-        <div class="px-4 py-8 mx-auto max-w-screen-md">
+        <div class="px-4 py-8 mx-auto max-w-screen-xl">
           <Header user={props.data?.user ?? null} />
           {props.data ? <SignedIn {...props.data} /> : <SignedOut />}
         </div>

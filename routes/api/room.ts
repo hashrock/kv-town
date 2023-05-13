@@ -1,7 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import {
-  getPosition,
-} from "../../utils/db.ts";
+import { getPosition } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 interface Data {
   user: User | null;

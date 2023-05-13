@@ -90,9 +90,24 @@ export default function Chat() {
       </div>
 
       <Positions positions={positions} />
+      <Canvas positions={positions} />
 
       <Messages messages={messages} />
     </div>
+  );
+}
+
+function Chara({ x, y }: { x: number; y: number }) {
+  return <circle cx={x} cy={y} r={20} fill="blue" />;
+}
+
+function Canvas({ positions }: { positions: Record<string, Position> }) {
+  return (
+    <svg class="bg-white" width={1200} height={600}>
+      {Object.entries(positions).map(([uid, position]) => (
+        <Chara x={position.x} y={position.y} />
+      ))}
+    </svg>
   );
 }
 

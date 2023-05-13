@@ -13,7 +13,6 @@ import * as $6 from "./routes/auth/oauth2callback.ts";
 import * as $7 from "./routes/auth/signin.ts";
 import * as $8 from "./routes/auth/signout.ts";
 import * as $9 from "./routes/index.tsx";
-import * as $10 from "./routes/new.tsx";
 import * as $$0 from "./islands/Room.tsx";
 import * as $$1 from "./islands/Walk.tsx";
 import * as $$2 from "./islands/WalkDeno.tsx";
@@ -30,7 +29,6 @@ const manifest = {
     "./routes/auth/signin.ts": $7,
     "./routes/auth/signout.ts": $8,
     "./routes/index.tsx": $9,
-    "./routes/new.tsx": $10,
   },
   islands: {
     "./islands/Room.tsx": $$0,

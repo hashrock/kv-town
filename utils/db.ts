@@ -8,7 +8,6 @@ import { Message } from "../types.ts";
 
 const kv = await Deno.openKv();
 
-
 export async function listMessage() {
   const iter = await kv.list<Message>({ prefix: ["message"] }, {
     reverse: true,
