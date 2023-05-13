@@ -10,14 +10,6 @@ export interface User {
   memos?: string[];
 }
 
-export interface Memo {
-  id: string;
-  title: string;
-  body: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface OauthSession {
   state: string;
   codeVerifier: string;
