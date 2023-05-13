@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 import { Position } from "../utils/db.ts";
@@ -98,7 +98,20 @@ export default function Chat() {
 }
 
 function Chara({ x, y }: { x: number; y: number }) {
-  return <circle cx={x} cy={y} r={20} fill="blue" />;
+  const circleRef = useRef<SVGCircleElement>(null);
+  useEffect(() => {
+    if (circleRef.current) {
+      circleRef.current.animate([
+        { transform: `translate(${x}px, ${y}px)` },
+      ], {
+        duration: 1000,
+        fill: "forwards",
+        easing: "ease-in-out",
+      });
+    }
+  }, [x, y]);
+
+  return <circle ref={circleRef} cx={0} cy={0} r={20} fill="blue" />;
 }
 
 function Canvas({ positions }: { positions: Record<string, Position> }) {
