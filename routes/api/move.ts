@@ -12,7 +12,7 @@ export const handler: Handlers<Data, State> = {
     const msg = await req.json();
 
     const x = msg["x"];
-    const y = msg["x"];
+    const y = msg["y"];
     if (typeof x !== "number") {
       return new Response("invalid body", { status: 400 });
     }
