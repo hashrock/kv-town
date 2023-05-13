@@ -1,6 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { deleteCookie, getCookies, setCookie } from "$std/http/cookie.ts";
-import { getAndDeleteOauthSession, setUserWithSession } from "🛠️/db.ts";
+import { getAndDeleteOauthSession, setUserWithSession } from "🛠️/auth_db.ts";
 import { getAuthenticatedUser } from "🛠️/github.ts";
 import { oauth2Client } from "🛠️/oauth.ts";
 import { User } from "🛠️/types.ts";

@@ -2,7 +2,7 @@ import { HandlerContext, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 
 import { State, User } from "🛠️/types.ts";
-import { getUserBySession, listRecentlySignedInUsers } from "🛠️/db.ts";
+import { getUserBySession, listRecentlySignedInUsers } from "🛠️/auth_db.ts";
 
 import { Button, ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";

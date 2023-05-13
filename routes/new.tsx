@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import { getUserBySession } from "🛠️/db.ts";
+import { getUserBySession } from "🛠️/auth_db.ts";
 import { State, User } from "🛠️/types.ts";
 
 import { Header } from "🧱/Header.tsx";

@@ -1,6 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { deleteCookie } from "$std/http/cookie.ts";
-import { deleteSession } from "🛠️/db.ts";
+import { deleteSession } from "🛠️/auth_db.ts";
 import { State } from "🛠️/types.ts";
 
 export const handler: Handlers<undefined, State> = {

@@ -1,6 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { setCookie } from "$std/http/cookie.ts";
-import { setOauthSession } from "🛠️/db.ts";
+import { setOauthSession } from "🛠️/auth_db.ts";
 import { oauth2Client } from "🛠️/oauth.ts";
 
 export const handler: Handlers = {

@@ -1,7 +1,8 @@
-import { BroadcastMessage, Message } from "../../types.ts";
+import { BroadcastMessage } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
-import { addMessage, getUserBySession } from "../../utils/db.ts";
+import { addMessage } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
+import { getUserBySession } from "../../utils/auth_db.ts";
 interface Data {
   user: User | null;
 }

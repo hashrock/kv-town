@@ -1,11 +1,10 @@
 import { BroadcastMessage, Message, MoveMesssage } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
 import {
-  addMessage,
   getUserBySession,
-  updatePosition,
-} from "../../utils/db.ts";
+} from "../../utils/auth_db.ts";
 import { State, User } from "../../utils/types.ts";
+import { updatePosition } from "../../utils/db.ts";
 interface Data {
   user: User | null;
 }
