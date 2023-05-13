@@ -90,9 +90,11 @@ export default function Chat() {
       </div>
 
       <Positions positions={positions} />
-      <Canvas positions={positions} 
+      <Canvas
+        positions={positions}
         onClick={(e) => {
-          const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+          const rect = (e.currentTarget as SVGSVGElement)
+            .getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           fetch("/api/move", {
@@ -103,7 +105,7 @@ export default function Chat() {
             }),
           });
         }}
-       />
+      />
 
       <Messages messages={messages} />
     </div>
@@ -120,7 +122,7 @@ function Chara({ x, y }: { x: number; y: number }) {
         duration: 1000,
         fill: "forwards",
         easing: "ease-in-out",
-      })
+      });
       animation.finished.then(() => {
         animation.commitStyles();
       });
@@ -130,7 +132,12 @@ function Chara({ x, y }: { x: number; y: number }) {
   return <circle ref={circleRef} cx={0} cy={0} r={20} fill="blue" />;
 }
 
-function Canvas({ positions, onClick }: { positions: Record<string, Position>, onClick: (e: MouseEvent) => void }) {
+function Canvas(
+  { positions, onClick }: {
+    positions: Record<string, Position>;
+    onClick: (e: MouseEvent) => void;
+  },
+) {
   return (
     <svg class="bg-white" width={1200} height={600} onClick={onClick}>
       {Object.entries(positions).map(([uid, position]) => (
