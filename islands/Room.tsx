@@ -114,6 +114,13 @@ export default function Chat() {
 
 function Chara({ x, y }: { x: number; y: number }) {
   const circleRef = useRef<SVGCircleElement>(null);
+
+  useEffect(() => {
+    if (circleRef.current) {
+      circleRef.current.style.transform = `translate(${x}px, ${y}px)`;
+    }
+  }, []);
+
   useEffect(() => {
     if (circleRef.current) {
       const animation = circleRef.current.animate([
