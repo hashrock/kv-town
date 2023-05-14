@@ -1,5 +1,3 @@
-import { Ref } from "preact/compat";
-
 export interface DenoProps {
   x: number;
   y: number;
