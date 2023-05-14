@@ -89,7 +89,6 @@ export default function Chat() {
         }}
       />
       <SendMessageForm />
-      <ConnectionStateDisplay state={connectionState} />
     </div>
   );
 }
@@ -254,7 +253,7 @@ function Canvas(
 ) {
   return (
     <svg class="bg-white" width={1200} height={600} onClick={onClick}>
-      <image href="/crop.png" width={1200} height={600} />
+      <image href="/crop.png" x={-10} y={-10} width={1220} height={620} />
 
       {Object.entries(positions).slice().sort((a, b) => {
         return a[1].y - b[1].y;
@@ -288,21 +287,6 @@ function Canvas(
       </g>
     </svg>
   );
-}
-
-interface CSDisplayProps {
-  state: Signal<ConnectionState>;
-}
-
-function ConnectionStateDisplay({ state }: CSDisplayProps) {
-  switch (state.value) {
-    case ConnectionState.Connecting:
-      return <span>🟡 Connecting...</span>;
-    case ConnectionState.Connected:
-      return <span>🟢 Connected</span>;
-    case ConnectionState.Disconnected:
-      return <span>🔴 Disconnected</span>;
-  }
 }
 
 function SendMessageForm() {

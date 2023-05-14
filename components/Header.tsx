@@ -6,9 +6,9 @@ const linkClass = "text-sm text-blue-500 hover:underline";
 export function Header(props: { user: User | null }) {
   return (
     <>
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center text-gray-200">
         <a href="/">
-          <h1 class="text-4xl font-bold">KV Town</h1>
+          <h1 class="text-2xl font-bold">KV Town</h1>
         </a>
         <a
           href="https://github.com/hashrock/kv-notepad"
