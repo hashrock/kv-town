@@ -92,6 +92,7 @@ export default function Chat() {
 
       <Canvas
         positions={positions}
+        messages={messages.value}
         onClick={(e) => {
           const rect = (e.currentTarget as SVGSVGElement)
             .getBoundingClientRect();
@@ -107,8 +108,8 @@ export default function Chat() {
         }}
       />
 
-      {/* <Messages messages={messages} /> */}
-      {/* <Positions positions={positions} /> */}
+      <Messages messages={messages} />
+      <Positions positions={positions} />
     </div>
   );
 }
@@ -121,7 +122,15 @@ function interpolate(
   return x1 + (x2 - x1) * t;
 }
 
-function Chara({ x, y }: { x: number; y: number }) {
+interface CharaProps {
+  x: number;
+  y: number;
+  username: string;
+  uid: string;
+  messages: Message[];
+}
+
+function Chara({ x, y, username }: CharaProps) {
   const svgRef = useRef<SVGGElement>(null);
   const [isWalk, setIsWalk] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -208,6 +217,31 @@ function Chara({ x, y }: { x: number; y: number }) {
   return (
     <g>
       <g ref={svgRef}>
+        <text
+          x={0}
+          y={20}
+          fill="white"
+          stroke="#88F"
+          stroke-width="4"
+          font-size="13"
+          font-weight="bold"
+          font-family="sans-serif"
+          text-anchor="middle"
+          stroke-linejoin="round"
+        >
+          {username}
+        </text>
+        <text
+          x={0}
+          y={20}
+          fill="white"
+          font-size="13"
+          font-weight="bold"
+          font-family="sans-serif"
+          text-anchor="middle"
+        >
+          {username}
+        </text>
         <WalkDeno
           x={-50}
           y={-100}
@@ -222,8 +256,9 @@ function Chara({ x, y }: { x: number; y: number }) {
 }
 
 function Canvas(
-  { positions, onClick }: {
+  { positions, onClick, messages }: {
     positions: Record<string, Position>;
+    messages: Message[];
     onClick: (e: MouseEvent) => void;
   },
 ) {
@@ -232,7 +267,14 @@ function Canvas(
       {Object.entries(positions).slice().sort((a, b) => {
         return a[1].y - b[1].y;
       }).map(([uid, position]) => (
-        <Chara key={uid} x={position.x} y={position.y} />
+        <Chara
+          key={uid}
+          x={position.x}
+          y={position.y}
+          username={position.username}
+          messages={messages}
+          uid={uid}
+        />
       ))}
     </svg>
   );
