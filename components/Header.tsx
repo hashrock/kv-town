@@ -11,7 +11,7 @@ export function Header(props: { user: User | null }) {
           <h1 class="text-2xl font-bold">KV Town</h1>
         </a>
         <a
-          href="https://github.com/hashrock/kv-notepad"
+          href="https://github.com/hashrock/kv-town"
           class={`${linkClass} text-right`}
         >
           View on GitHub
