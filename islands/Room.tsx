@@ -69,16 +69,6 @@ export default function Chat() {
     return () => events.close();
   }, []);
 
-  function handleMove() {
-    fetch("/api/move", {
-      method: "POST",
-      body: JSON.stringify({
-        x: Math.floor(Math.random() * 100),
-        y: Math.floor(Math.random() * 100),
-      }),
-    });
-  }
-
   return (
     <div class="w-full">
       <Canvas
