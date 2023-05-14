@@ -300,23 +300,6 @@ function Canvas(
   );
 }
 
-function Positions({ positions }: { positions: Record<string, Position> }) {
-  return (
-    <div>
-      {Object.entries(positions).map(([uid, position]) => (
-        <div>
-          <span>{position.username}({uid})</span>:
-          <span>[{position.x}</span>,
-          <span>{position.y}]</span>...
-          <span>
-            {Math.round((Date.now() - position.ts) / 1000)}second ago
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 interface CSDisplayProps {
   state: Signal<ConnectionState>;
 }
@@ -358,18 +341,5 @@ function SendMessageForm() {
         Send Message
       </button>
     </form>
-  );
-}
-
-function Messages({ messages }: { messages: Signal<Message[]> }) {
-  return (
-    <ul>
-      {messages.value.slice().reverse().map((msg) => (
-        <li class="flex gap-2 items-center">
-          <span class="font-bold">{msg.username}</span>
-          <span>{msg.body}</span>
-        </li>
-      ))}
-    </ul>
   );
 }
