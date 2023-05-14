@@ -61,12 +61,6 @@ function SignedIn(props: SignedInData) {
   return (
     <>
       <div class="">
-        <div class="mt-16 flex justify-end">
-          <LinkButton href="/new">
-            Create New
-          </LinkButton>
-        </div>
-
         <div>
           <Room />
         </div>

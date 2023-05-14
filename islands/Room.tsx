@@ -81,15 +81,6 @@ export default function Chat() {
 
   return (
     <div class="w-full">
-      <ConnectionStateDisplay state={connectionState} />
-      <SendMessageForm />
-
-      <div>
-        <button type="button" onClick={handleMove}>
-          Move
-        </button>
-      </div>
-
       <Canvas
         positions={positions}
         messages={messages.value}
@@ -107,6 +98,8 @@ export default function Chat() {
           });
         }}
       />
+      <SendMessageForm />
+      <ConnectionStateDisplay state={connectionState} />
     </div>
   );
 }
@@ -345,15 +338,16 @@ function SendMessageForm() {
   };
 
   return (
-    <form class="flex gap-2 py-4" onSubmit={onSubmit}>
+    <form class="flex gap-2 py-4 justify-center" onSubmit={onSubmit}>
       <input
-        class="border border-gray-300 rounded px-2 py-1"
+        class="border border-gray-300 rounded px-2 py-1 w-[400px]"
         type="text"
         value={message.value}
         onInput={(e) => message.value = e.currentTarget.value}
       />
-
-      <button>Submit</button>
+      <button type="Submit" class="bg-gray-900 text-white px-4 py-3 rounded">
+        Send Message
+      </button>
     </form>
   );
 }
