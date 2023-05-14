@@ -127,12 +127,12 @@ function Chara({ x, y }: { x: number; y: number }) {
   const [direction, setDirection] = useState(0);
   const [frame, setFrame] = useState(0);
 
-  const [x1, setX1] = useState(0);
-  const [y1, setY1] = useState(0);
-  const [x2, setX2] = useState(0);
-  const [y2, setY2] = useState(0);
+  const [x1, setX1] = useState(x);
+  const [y1, setY1] = useState(y);
+  const [x2, setX2] = useState(x);
+  const [y2, setY2] = useState(y);
 
-  const [t, setT] = useState(0);
+  const [t, setT] = useState(1);
   const [duration, setDuration] = useState(0);
   const speed = 500;
 
@@ -171,7 +171,7 @@ function Chara({ x, y }: { x: number; y: number }) {
       }
       return direction;
     });
-  }, [x, y]);
+  }, [x, y, x1, y1, x2, y2]);
 
   const animationInterval = useRef(0);
   const [walkTimer, setWalkTimer] = useState(0);
@@ -207,10 +207,6 @@ function Chara({ x, y }: { x: number; y: number }) {
 
   return (
     <g>
-      <circle cx={x} cy={y} r={10} fill="red" />
-      <circle cx={x1} cy={y1} r={10} fill="yellow" />
-      <circle cx={x2} cy={y2} r={10} fill="blue" />
-
       <g ref={svgRef}>
         <WalkDeno
           x={-50}
