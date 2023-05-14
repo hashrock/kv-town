@@ -90,7 +90,6 @@ export default function Chat() {
         </button>
       </div>
 
-      <Positions positions={positions} />
       <Canvas
         positions={positions}
         onClick={(e) => {
@@ -108,9 +107,23 @@ export default function Chat() {
         }}
       />
 
-      <Messages messages={messages} />
+      {/* <Messages messages={messages} /> */}
+      {/* <Positions positions={positions} /> */}
     </div>
   );
+}
+
+function interpolate(
+  t: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+) {
+  return {
+    x: x1 + (x2 - x1) * t,
+    y: y1 + (y2 - y1) * t,
+  };
 }
 
 function Chara({ x, y }: { x: number; y: number }) {
@@ -118,46 +131,78 @@ function Chara({ x, y }: { x: number; y: number }) {
   const [isWalk, setIsWalk] = useState(false);
   const [direction, setDirection] = useState(0);
   const [frame, setFrame] = useState(0);
-  const [prevX, setPrevX] = useState(x);
-  const [prevY, setPrevY] = useState(y);
+
+  const [x1, setX1] = useState(0);
+  const [y1, setY1] = useState(0);
+  const [x2, setX2] = useState(0);
+  const [y2, setY2] = useState(0);
+  const [t, setT] = useState(0);
 
   useEffect(() => {
-    if (svgRef.current) {
-      svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
-      setPrevX(x);
-      setPrevY(y);
-    }
+    setX1(x);
+    setY1(y);
+    setX2(x);
+    setY2(y);
+    setT(0);
   }, []);
 
   useEffect(() => {
-    if (svgRef.current) {
-      setDirection((direction) => {
-        if (prevX < x && prevY < y) {
-          return 0;
-        } else if (prevX > x && prevY < y) {
-          return 2;
-        } else if (prevX < x && prevY > y) {
-          return 1;
-        } else if (prevX > x && prevY > y) {
-          return 3;
-        }
+    const old = interpolate(t, x1, y1, x2, y2);
+    console.log(old);
 
-        return direction;
-      });
-      const animation = svgRef.current.animate([
-        { transform: `translate(${x}px, ${y}px)` },
-      ], {
-        duration: 1000,
-        fill: "forwards",
-        easing: "ease-in-out",
-      });
-      setPrevX(x);
-      setPrevY(y);
-      animation.finished.then(() => {
-        animation.commitStyles();
-      });
-    }
+    setX1(old.x);
+    setY1(old.y);
+    setX2(x);
+    setY2(y);
+    setT(0);
   }, [x, y]);
+
+  // const frameInterval = useRef(0);
+  // useEffect(() => {
+  //   frameInterval.current = setInterval(() => {
+  //     // moving
+  //     // setX1(x2);
+  //     // setY1(y2);
+
+  //     if (svgRef && svgRef.current) {
+  //       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
+  //     }
+
+  //     // direction
+  //     // setDirection((direction) => {
+  //     //   if (prevX < x && prevY < y) {
+  //     //     return 0;
+  //     //   } else if (prevX > x && prevY < y) {
+  //     //     return 2;
+  //     //   } else if (prevX < x && prevY > y) {
+  //     //     return 1;
+  //     //   } else if (prevX > x && prevY > y) {
+  //     //     return 3;
+  //     //   }
+  //     //   return direction;
+  //     // });
+  //   }, 16);
+  //   return () => clearInterval(interval.current);
+  // }, []);
+
+  const animationInterval = useRef(0);
+  const animate = () => {
+    const { x, y } = interpolate(t, x1, y1, x2, y2);
+
+    if (svgRef && svgRef.current) {
+      svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    if (t < 1) {
+      setT(t + 0.03);
+    }
+
+    animationInterval.current = requestAnimationFrame(animate);
+  };
+  useEffect(() => {
+    animationInterval.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationInterval.current);
+  }, [animate]);
 
   const interval = useRef(0);
   useEffect(() => {
@@ -168,15 +213,21 @@ function Chara({ x, y }: { x: number; y: number }) {
   }, []);
 
   return (
-    <g ref={svgRef}>
-      <WalkDeno
-        x={-50}
-        y={-100}
-        index={frame}
-        direction={direction}
-        color="#FFE"
-        isWalk={false}
-      />
+    <g>
+      <circle cx={x} cy={y} r={10} fill="red" />
+      <circle cx={x1} cy={y1} r={10} fill="yellow" />
+      <circle cx={x2} cy={y2} r={10} fill="blue" />
+
+      <g ref={svgRef}>
+        <WalkDeno
+          x={-50}
+          y={-100}
+          index={frame}
+          direction={direction}
+          color="#FFE"
+          isWalk={false}
+        />
+      </g>
     </g>
   );
 }
