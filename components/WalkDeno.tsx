@@ -1,3 +1,5 @@
+import { Ref } from "preact/compat";
+
 export interface DenoProps {
   x: number;
   y: number;
@@ -7,7 +9,7 @@ export interface DenoProps {
   isWalk: boolean;
 }
 
-export default function WalkDeno(props: DenoProps) {
+export function WalkDeno(props: DenoProps) {
   const viewBox = `${props.direction * 4 * 40 + (props.index) * 40} 0 40 40`;
   const color = props.color;
 

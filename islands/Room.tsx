@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 import { Position } from "../utils/db.ts";
+import { WalkDeno } from "../components/WalkDeno.tsx";
 
 enum ConnectionState {
   Connecting,
@@ -113,17 +114,17 @@ export default function Chat() {
 }
 
 function Chara({ x, y }: { x: number; y: number }) {
-  const circleRef = useRef<SVGCircleElement>(null);
+  const svgRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
-    if (circleRef.current) {
-      circleRef.current.style.transform = `translate(${x}px, ${y}px)`;
+    if (svgRef.current) {
+      svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
     }
   }, []);
 
   useEffect(() => {
-    if (circleRef.current) {
-      const animation = circleRef.current.animate([
+    if (svgRef.current) {
+      const animation = svgRef.current.animate([
         { transform: `translate(${x}px, ${y}px)` },
       ], {
         duration: 1000,
@@ -136,7 +137,18 @@ function Chara({ x, y }: { x: number; y: number }) {
     }
   }, [x, y]);
 
-  return <circle ref={circleRef} cx={0} cy={0} r={20} fill="blue" />;
+  return (
+    <g ref={svgRef}>
+      <WalkDeno
+        x={-50}
+        y={-100}
+        index={0}
+        direction={0}
+        color="#FFE"
+        isWalk={false}
+      />
+    </g>
+  );
 }
 
 function Canvas(

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import WalkDeno, { DenoProps } from "./WalkDeno.tsx";
+import { DenoProps, WalkDeno } from "./WalkDeno.tsx";
 const width = 1200;
 const height = 1200;
 
