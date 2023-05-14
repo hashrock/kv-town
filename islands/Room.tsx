@@ -134,7 +134,7 @@ function Chara({ x, y }: { x: number; y: number }) {
 
   const [t, setT] = useState(0);
   const [duration, setDuration] = useState(0);
-  const speed = 1000;
+  const speed = 500;
 
   useEffect(() => {
     setX1(x);
@@ -157,38 +157,26 @@ function Chara({ x, y }: { x: number; y: number }) {
 
     const dist = Math.sqrt((x - old.x) ** 2 + (y - old.y) ** 2);
     setDuration(dist / speed);
+    setIsWalk(true);
+
+    setDirection((direction) => {
+      if (old.x < x && old.y < y) {
+        return 0;
+      } else if (old.x > x && old.y < y) {
+        return 2;
+      } else if (old.x < x && old.y > y) {
+        return 1;
+      } else if (old.x > x && old.y > y) {
+        return 3;
+      }
+      return direction;
+    });
   }, [x, y]);
 
-  // const frameInterval = useRef(0);
-  // useEffect(() => {
-  //   frameInterval.current = setInterval(() => {
-  //     // moving
-  //     // setX1(x2);
-  //     // setY1(y2);
-
-  //     if (svgRef && svgRef.current) {
-  //       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
-  //     }
-
-  //     // direction
-  //     // setDirection((direction) => {
-  //     //   if (prevX < x && prevY < y) {
-  //     //     return 0;
-  //     //   } else if (prevX > x && prevY < y) {
-  //     //     return 2;
-  //     //   } else if (prevX < x && prevY > y) {
-  //     //     return 1;
-  //     //   } else if (prevX > x && prevY > y) {
-  //     //     return 3;
-  //     //   }
-  //     //   return direction;
-  //     // });
-  //   }, 16);
-  //   return () => clearInterval(interval.current);
-  // }, []);
-
   const animationInterval = useRef(0);
-  const animate = () => {
+  const [walkTimer, setWalkTimer] = useState(0);
+
+  const animate = (ts: number) => {
     const x = interpolate(t, x1, x2);
     const y = interpolate(t, y1, y2);
 
@@ -202,6 +190,12 @@ function Chara({ x, y }: { x: number; y: number }) {
       setX1(x2);
       setY1(y2);
       setT(0);
+      setIsWalk(false);
+    }
+
+    if (ts - walkTimer > 100 && isWalk) {
+      setFrame((frame) => (frame + 1) % 4);
+      setWalkTimer(ts);
     }
 
     animationInterval.current = requestAnimationFrame(animate);
@@ -210,14 +204,6 @@ function Chara({ x, y }: { x: number; y: number }) {
     animationInterval.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationInterval.current);
   }, [animate]);
-
-  const interval = useRef(0);
-  useEffect(() => {
-    interval.current = setInterval(() => {
-      setFrame((frame) => (frame + 1) % 4);
-    }, 600);
-    return () => clearInterval(interval.current);
-  }, []);
 
   return (
     <g>
