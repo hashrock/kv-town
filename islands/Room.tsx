@@ -253,12 +253,27 @@ function Chara({ x, y, username, messages, uid, color }: CharaProps) {
           color={color}
           isWalk={false}
         />
+        <rect
+          x={-100}
+          y={-160}
+          width={200}
+          height={60}
+          fill="rgba(253,253,253,0.8)"
+          rx={10}
+          ry={10}
+        />
+        <polygon
+          points="-10,-10 10,-10 0,10"
+          fill="rgba(253,253,253,0.8)"
+          transform={`translate(0, -90)`}
+        />
+
         <foreignObject x={-100} y={-160} width={200} height={60}>
           {messages.filter((message) => message.uid === uid).slice().reverse()
             .slice(0, 1).map((
               message,
             ) => (
-              <div class="flex justify-center items-center h-full bg-green-100 rounded-2xl p-4 text-center border-4 border-green-500">
+              <div class="flex justify-center items-center h-full p-4 text-center font-medium">
                 {message.body}
               </div>
             ))}
@@ -300,12 +315,20 @@ function Canvas(
           width={300}
           height={300}
           fill="rgba(0, 0, 0, 0.5)"
+          rx={10}
+          ry={10}
         />
         {Object.entries(messages).slice().reverse().slice(0, 10).reverse().map((
           [index, message],
           idx,
         ) => (
-          <text x={10} y={20 * (idx + 1) + 10} fill="white" font-size="13">
+          <text
+            x={10}
+            y={20 * (idx + 1) + 10}
+            fill="white"
+            font-size="13"
+            opacity={idx * 0.1 + 0.2}
+          >
             <tspan fill="#AAF">{message.username}</tspan> {message.body}
           </text>
         ))}
