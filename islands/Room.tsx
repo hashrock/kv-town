@@ -138,7 +138,7 @@ function Chara({ x, y }: { x: number; y: number }) {
   const [y2, setY2] = useState(0);
 
   const [t, setT] = useState(0);
-  const [dulation, setDulation] = useState(0);
+  const [duration, setDuration] = useState(0);
   const speed = 1000;
 
   useEffect(() => {
@@ -158,7 +158,7 @@ function Chara({ x, y }: { x: number; y: number }) {
     setT(0);
 
     const dist = Math.sqrt((x - old.x) ** 2 + (y - old.y) ** 2);
-    setDulation(dist / speed);
+    setDuration(dist / speed);
   }, [x, y]);
 
   // const frameInterval = useRef(0);
@@ -196,7 +196,7 @@ function Chara({ x, y }: { x: number; y: number }) {
     if (svgRef && svgRef.current) {
       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
     }
-    const delta = 1 / dulation / 100;
+    const delta = 1 / duration / 100;
     if (t < 1 - delta) {
       setT((t) => t + delta);
     } else {
