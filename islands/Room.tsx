@@ -115,15 +115,35 @@ export default function Chat() {
 
 function Chara({ x, y }: { x: number; y: number }) {
   const svgRef = useRef<SVGGElement>(null);
+  const [isWalk, setIsWalk] = useState(false);
+  const [direction, setDirection] = useState(0);
+  const [frame, setFrame] = useState(0);
+  const [prevX, setPrevX] = useState(x);
+  const [prevY, setPrevY] = useState(y);
 
   useEffect(() => {
     if (svgRef.current) {
       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
+      setPrevX(x);
+      setPrevY(y);
     }
   }, []);
 
   useEffect(() => {
     if (svgRef.current) {
+      setDirection((direction) => {
+        if (prevX < x && prevY < y) {
+          return 0;
+        } else if (prevX > x && prevY < y) {
+          return 2;
+        } else if (prevX < x && prevY > y) {
+          return 1;
+        } else if (prevX > x && prevY > y) {
+          return 3;
+        }
+
+        return direction;
+      });
       const animation = svgRef.current.animate([
         { transform: `translate(${x}px, ${y}px)` },
       ], {
@@ -131,19 +151,29 @@ function Chara({ x, y }: { x: number; y: number }) {
         fill: "forwards",
         easing: "ease-in-out",
       });
+      setPrevX(x);
+      setPrevY(y);
       animation.finished.then(() => {
         animation.commitStyles();
       });
     }
   }, [x, y]);
 
+  const interval = useRef(0);
+  useEffect(() => {
+    interval.current = setInterval(() => {
+      setFrame((frame) => (frame + 1) % 4);
+    }, 600);
+    return () => clearInterval(interval.current);
+  }, []);
+
   return (
     <g ref={svgRef}>
       <WalkDeno
         x={-50}
         y={-100}
-        index={0}
-        direction={0}
+        index={frame}
+        direction={direction}
         color="#FFE"
         isWalk={false}
       />
