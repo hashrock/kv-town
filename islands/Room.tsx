@@ -229,8 +229,10 @@ function Canvas(
 ) {
   return (
     <svg class="bg-white" width={1200} height={600} onClick={onClick}>
-      {Object.entries(positions).map(([uid, position]) => (
-        <Chara x={position.x} y={position.y} />
+      {Object.entries(positions).slice().sort((a, b) => {
+        return a[1].y - b[1].y;
+      }).map(([uid, position]) => (
+        <Chara key={uid} x={position.x} y={position.y} />
       ))}
     </svg>
   );
