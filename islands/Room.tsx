@@ -136,7 +136,10 @@ function Chara({ x, y }: { x: number; y: number }) {
   const [y1, setY1] = useState(0);
   const [x2, setX2] = useState(0);
   const [y2, setY2] = useState(0);
+
   const [t, setT] = useState(0);
+  const [dulation, setDulation] = useState(0);
+  const speed = 1000;
 
   useEffect(() => {
     setX1(x);
@@ -148,13 +151,14 @@ function Chara({ x, y }: { x: number; y: number }) {
 
   useEffect(() => {
     const old = interpolate(t, x1, y1, x2, y2);
-    console.log(old);
-
     setX1(old.x);
     setY1(old.y);
     setX2(x);
     setY2(y);
     setT(0);
+
+    const dist = Math.sqrt((x - old.x) ** 2 + (y - old.y) ** 2);
+    setDulation(dist / speed);
   }, [x, y]);
 
   // const frameInterval = useRef(0);
@@ -192,9 +196,13 @@ function Chara({ x, y }: { x: number; y: number }) {
     if (svgRef && svgRef.current) {
       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
     }
-
-    if (t < 1) {
-      setT(t + 0.03);
+    const delta = 1 / dulation / 100;
+    if (t < 1 - delta) {
+      setT((t) => t + delta);
+    } else {
+      setX1(x2);
+      setY1(y2);
+      setT(0);
     }
 
     animationInterval.current = requestAnimationFrame(animate);
