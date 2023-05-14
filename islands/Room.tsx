@@ -264,6 +264,8 @@ function Canvas(
 ) {
   return (
     <svg class="bg-white" width={1200} height={600} onClick={onClick}>
+      <image href="/crop.png" width={1200} height={600} />
+
       {Object.entries(positions).slice().sort((a, b) => {
         return a[1].y - b[1].y;
       }).map(([uid, position]) => (
@@ -277,13 +279,20 @@ function Canvas(
         />
       ))}
 
-      <g transform="translate(0, 380)">
-        {Object.entries(messages).slice().reverse().slice(0, 10).map((
+      <g transform="translate(0, 370)">
+        <rect
+          x={0}
+          y={0}
+          width={300}
+          height={300}
+          fill="rgba(0, 0, 0, 0.5)"
+        />
+        {Object.entries(messages).slice().reverse().slice(0, 10).reverse().map((
           [index, message],
           idx,
         ) => (
-          <text x={10} y={20 * (idx + 1)} fill="black" font-size="13">
-            {message.username}: {message.body}
+          <text x={10} y={20 * (idx + 1) + 10} fill="white" font-size="13">
+            <tspan fill="#AAF">{message.username}</tspan> {message.body}
           </text>
         ))}
       </g>
