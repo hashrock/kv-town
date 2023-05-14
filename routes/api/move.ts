@@ -13,6 +13,8 @@ export const handler: Handlers<Data, State> = {
 
     const x = msg["x"];
     const y = msg["y"];
+    const color = msg["color"];
+
     if (typeof x !== "number") {
       return new Response("invalid body", { status: 400 });
     }
@@ -31,6 +33,7 @@ export const handler: Handlers<Data, State> = {
       payload: {
         x: x,
         y: y,
+        color: color,
       },
       type: "move",
     };
@@ -41,6 +44,7 @@ export const handler: Handlers<Data, State> = {
       y: y,
       ts,
       username: user?.name ?? "anonymous",
+      color,
     });
 
     channel.postMessage(message);

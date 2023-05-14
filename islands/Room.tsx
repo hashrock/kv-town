@@ -10,12 +10,24 @@ enum ConnectionState {
   Disconnected,
 }
 
+const expire = 60000;
+
 export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
   const [positions, setPositions] = useState<Record<string, Position>>({});
+  const [myColor, setMyColor] = useState(randomColor());
 
   useEffect(() => {
+    fetch("/api/move", {
+      method: "POST",
+      body: JSON.stringify({
+        x: Math.floor(Math.random() * 1000) + 100,
+        y: Math.floor(Math.random() * 400) + 100,
+        color: myColor,
+      }),
+    });
+
     fetch("/api/message").then((r) => r.json()).then((d_messages) => {
       d_messages.reverse();
       d_messages.forEach((message: Message) => {
@@ -24,6 +36,15 @@ export default function Chat() {
     });
 
     fetch("/api/room").then((r) => r.json()).then((d_room) => {
+      // remove expired positions
+      const now = Date.now();
+      Object.entries(d_room).forEach(([uid, position]) => {
+        const p = position as Position;
+        if (now - p.ts > expire) {
+          delete d_room[uid];
+        }
+      });
+
       setPositions(d_room);
     });
 
@@ -55,6 +76,7 @@ export default function Chat() {
           y: payload.y,
           uid: message.uid,
           ts: message.ts,
+          color: payload.color,
         };
         setPositions((positions) => ({
           ...positions,
@@ -84,6 +106,7 @@ export default function Chat() {
             body: JSON.stringify({
               x,
               y,
+              color: myColor,
             }),
           });
         }}
@@ -107,9 +130,10 @@ interface CharaProps {
   username: string;
   uid: string;
   messages: Message[];
+  color: string;
 }
 
-function Chara({ x, y, username, messages, uid }: CharaProps) {
+function Chara({ x, y, username, messages, uid, color }: CharaProps) {
   const svgRef = useRef<SVGGElement>(null);
   const [isWalk, setIsWalk] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -226,7 +250,7 @@ function Chara({ x, y, username, messages, uid }: CharaProps) {
           y={-100}
           index={frame}
           direction={direction}
-          color="#FFE"
+          color={color}
           isWalk={false}
         />
         <foreignObject x={-100} y={-160} width={200} height={60}>
@@ -265,6 +289,7 @@ function Canvas(
           username={position.username}
           messages={messages}
           uid={uid}
+          color={position.color}
         />
       ))}
 
@@ -287,6 +312,10 @@ function Canvas(
       </g>
     </svg>
   );
+}
+
+function randomColor() {
+  return `hsl(${Math.floor(Math.random() * 360)}, 100%, 70%)`;
 }
 
 function SendMessageForm() {

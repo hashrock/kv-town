@@ -17,6 +17,7 @@ export interface BroadcastMessage {
 export interface MoveMesssage {
   x: number;
   y: number;
+  color: string;
 }
 interface Avatar {
   x: number;

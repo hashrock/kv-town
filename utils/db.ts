@@ -9,10 +9,13 @@ import { Message } from "../types.ts";
 const kv = await Deno.openKv();
 
 export async function listMessage() {
-  const iter = await kv.list<Message>({ prefix: ["message"] }, {
-    reverse: true,
-    limit: 10,
-  });
+  const iter = await kv.list<Message>(
+    { prefix: ["message"] },
+    {
+      reverse: true,
+      limit: 10,
+    }
+  );
   const message: Message[] = [];
   for await (const item of iter) {
     message.push(item.value);
@@ -49,6 +52,7 @@ export interface Position {
   y: number;
   ts: number;
   username: string;
+  color: string;
 }
 
 export async function updatePosition(position: Position) {
