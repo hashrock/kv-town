@@ -107,9 +107,6 @@ export default function Chat() {
           });
         }}
       />
-
-      <Messages messages={messages} />
-      <Positions positions={positions} />
     </div>
   );
 }
@@ -130,7 +127,7 @@ interface CharaProps {
   messages: Message[];
 }
 
-function Chara({ x, y, username }: CharaProps) {
+function Chara({ x, y, username, messages, uid }: CharaProps) {
   const svgRef = useRef<SVGGElement>(null);
   const [isWalk, setIsWalk] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -250,6 +247,16 @@ function Chara({ x, y, username }: CharaProps) {
           color="#FFE"
           isWalk={false}
         />
+        <foreignObject x={-100} y={-160} width={200} height={60}>
+          {messages.filter((message) => message.uid === uid).slice().reverse()
+            .slice(0, 1).map((
+              message,
+            ) => (
+              <div class="flex justify-center items-center h-full bg-green-100 rounded-2xl p-4 text-center border-4 border-green-500">
+                {message.body}
+              </div>
+            ))}
+        </foreignObject>
       </g>
     </g>
   );
@@ -276,6 +283,17 @@ function Canvas(
           uid={uid}
         />
       ))}
+
+      <g transform="translate(0, 380)">
+        {Object.entries(messages).slice().reverse().slice(0, 10).map((
+          [index, message],
+          idx,
+        ) => (
+          <text x={10} y={20 * (idx + 1)} fill="black" font-size="13">
+            {message.username}: {message.body}
+          </text>
+        ))}
+      </g>
     </svg>
   );
 }
