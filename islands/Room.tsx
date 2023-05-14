@@ -116,14 +116,9 @@ export default function Chat() {
 function interpolate(
   t: number,
   x1: number,
-  y1: number,
   x2: number,
-  y2: number,
 ) {
-  return {
-    x: x1 + (x2 - x1) * t,
-    y: y1 + (y2 - y1) * t,
-  };
+  return x1 + (x2 - x1) * t;
 }
 
 function Chara({ x, y }: { x: number; y: number }) {
@@ -150,7 +145,10 @@ function Chara({ x, y }: { x: number; y: number }) {
   }, []);
 
   useEffect(() => {
-    const old = interpolate(t, x1, y1, x2, y2);
+    const old = {
+      x: interpolate(t, x1, x2),
+      y: interpolate(t, y1, y2),
+    };
     setX1(old.x);
     setY1(old.y);
     setX2(x);
@@ -191,7 +189,8 @@ function Chara({ x, y }: { x: number; y: number }) {
 
   const animationInterval = useRef(0);
   const animate = () => {
-    const { x, y } = interpolate(t, x1, y1, x2, y2);
+    const x = interpolate(t, x1, x2);
+    const y = interpolate(t, y1, y2);
 
     if (svgRef && svgRef.current) {
       svgRef.current.style.transform = `translate(${x}px, ${y}px)`;
