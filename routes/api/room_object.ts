@@ -20,7 +20,7 @@ export const handler: Handlers<Data, State> = {
     const channel = new BroadcastChannel("chat");
     const ts = Date.now();
     const body = await req.json();
-    const { x, y, name } = body;
+    const { x, y, name, size } = body;
 
     const message: BroadcastMessage = {
       ts,
@@ -30,13 +30,14 @@ export const handler: Handlers<Data, State> = {
         x: x,
         y: y,
         name: name,
+        size: size,
       },
       type: "room_object",
     };
     channel.postMessage(message);
     channel.close();
 
-    const id = await addRoomObject(user.id, x, y, name);
+    const id = await addRoomObject(user.id, x, y, name, size);
     return new Response(JSON.stringify({ id }));
   },
 };

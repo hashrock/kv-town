@@ -24,6 +24,7 @@ export interface RoomObjectMessage {
   x: number;
   y: number;
   name: string;
+  size: number;
 }
 
 interface Avatar {

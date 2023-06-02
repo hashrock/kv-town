@@ -11,8 +11,13 @@ import {
   move,
   sendMessage,
 } from "../utils/api.ts";
-import { randomColor, randomRange } from "../utils/room_utils.ts";
-
+import {
+  emojiUrl,
+  emojiUrlCodePoint,
+  randomColor,
+  randomRange,
+} from "../utils/room_utils.ts";
+import * as emoji from "../utils/emoji.ts";
 enum ConnectionState {
   Connecting,
   Connected,
@@ -20,7 +25,11 @@ enum ConnectionState {
 }
 
 const expire = 60000;
-
+const emojis = {
+  lg: emoji.emoji_building,
+  md: emoji.emoji_car,
+  sm: [...emoji.emoji_flower, ...emoji.emoji_food],
+};
 export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
@@ -109,6 +118,12 @@ export default function Chat() {
     return () => events.close();
   }, []);
 
+  const sizeDict: Record<string, number> = {
+    lg: 120,
+    md: 80,
+    sm: 50,
+  };
+
   return (
     <div class="w-full">
       <Canvas
@@ -128,16 +143,20 @@ export default function Chat() {
         }}
       />
       <SendMessageForm />
-      <div>
-        <button
-          class="bg-gray-700 hover:bg-gray-600 text-lg text-white px-4 py-3 rounded"
-          onClick={() => {
-            addRoomObject(myX, myY, "🌼");
-          }}
-        >
-          🌼
-        </button>
-      </div>
+      {Object.entries(emojis).map(([size, emojiList]) => (
+        <div class="gap-2 py-4 justify-center">
+          {emojiList.map((emoji) => (
+            <button
+              class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+              onClick={() => {
+                addRoomObject(myX, myY, emoji, sizeDict[size]);
+              }}
+            >
+              <img src={emojiUrl(emoji)} class="w-12 h-12" />
+            </button>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }

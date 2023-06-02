@@ -2,6 +2,8 @@ import { Message } from "../types.ts";
 import { Position, RoomObject } from "../utils/db.ts";
 import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
+import twemoji from "https://esm.sh/twemoji@14.0.2";
+import { emojiUrl, emojiUrlCodePoint } from "../utils/room_utils.ts";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -99,16 +101,19 @@ export function Canvas(
         }
 
         if (i.roomObject) {
+          const url = emojiUrl(i.roomObject.name);
+          const size = i === undefined ? 25 : i.roomObject.size;
           return (
-            <text
-              key={i.roomObject?.id}
-              x={i.roomObject?.x}
-              y={i.roomObject?.y}
-              fill="white"
-              font-size="40"
-            >
-              {i.roomObject?.name}
-            </text>
+            <g>
+              <image
+                key={i.roomObject.id}
+                href={url}
+                x={i.roomObject.x - size / 2}
+                y={i.roomObject.y - size / 2}
+                width={size}
+                height={size}
+              />
+            </g>
           );
         }
 

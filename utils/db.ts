@@ -71,7 +71,8 @@ export async function addRoomObject(
   uid: string,
   x: number,
   y: number,
-  name: string
+  name: string,
+  size: number
 ) {
   const id = uuidv7();
   const ts = Date.now();
@@ -82,6 +83,7 @@ export async function addRoomObject(
     y,
     name,
     ts,
+    size,
   };
   await kv.set(["room_object", id], roomObject);
   return id;
@@ -94,6 +96,7 @@ export interface RoomObject {
   y: number;
   name: string;
   ts: number;
+  size: number;
 }
 
 export interface Position {
