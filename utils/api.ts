@@ -32,3 +32,24 @@ export function sendMessage(msg: string) {
     }),
   });
 }
+
+export function addRoomObject(
+  x: number,
+  y: number,
+  name: string,
+  size: number
+) {
+  return fetch("/api/room_object", {
+    method: "POST",
+    body: JSON.stringify({
+      x,
+      y,
+      name,
+      size,
+    }),
+  });
+}
+
+export function getRoomObjects() {
+  return fetch("/api/room_object").then((r) => r.json());
+}

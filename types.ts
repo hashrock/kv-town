@@ -7,8 +7,8 @@ export interface Message {
 }
 
 export interface BroadcastMessage {
-  type: "message" | "move";
-  payload: Message | MoveMesssage;
+  type: "message" | "move" | "room_object";
+  payload: Message | MoveMesssage | RoomObjectMessage;
   ts: number;
   uid: string;
   username: string;
@@ -19,6 +19,14 @@ export interface MoveMesssage {
   y: number;
   color: string;
 }
+
+export interface RoomObjectMessage {
+  x: number;
+  y: number;
+  name: string;
+  size: number;
+}
+
 interface Avatar {
   x: number;
   y: number;

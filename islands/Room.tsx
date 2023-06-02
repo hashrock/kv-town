@@ -1,16 +1,23 @@
 import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
-import { Position } from "../utils/db.ts";
+import { Position, RoomObject } from "../utils/db.ts";
 import { Canvas } from "../components/Canvas.tsx";
 import {
+  addRoomObject,
   getRoomMessage,
+  getRoomObjects,
   getRoomPositions,
   move,
   sendMessage,
 } from "../utils/api.ts";
-import { randomColor, randomRange } from "../utils/room_utils.ts";
-
+import {
+  emojiUrl,
+  emojiUrlCodePoint,
+  randomColor,
+  randomRange,
+} from "../utils/room_utils.ts";
+import * as emoji from "../utils/emoji.ts";
 enum ConnectionState {
   Connecting,
   Connected,
@@ -18,12 +25,19 @@ enum ConnectionState {
 }
 
 const expire = 60000;
-
+const emojis = {
+  lg: emoji.emoji_building,
+  md: emoji.emoji_car,
+  sm: [...emoji.emoji_flower, ...emoji.emoji_food],
+};
 export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
   const [positions, setPositions] = useState<Record<string, Position>>({});
   const [myColor] = useState(randomColor());
+  const [roomObjects, setRoomObjects] = useState<RoomObject[]>([]);
+  const [myX, setMyX] = useState(0);
+  const [myY, setMyY] = useState(0);
 
   useEffect(() => {
     const events = new EventSource("/api/listen");
@@ -65,12 +79,21 @@ export default function Chat() {
         const payload = message.payload as Message;
         messages.value = [...messages.value, payload];
       }
+      if (message.type === "room_object") {
+        const payload = message.payload as RoomObject;
+        setRoomObjects((roomObjects) => [...roomObjects, payload]);
+      }
     });
 
     (async () => {
+      const mx = randomRange(100, 1100);
+      const my = randomRange(100, 500);
+      setMyX(mx);
+      setMyY(my);
+
       await move(
-        randomRange(100, 1100),
-        randomRange(100, 500),
+        mx,
+        my,
         myColor,
       );
       messages.value = [...messages.value, ...await getRoomMessage()];
@@ -87,26 +110,53 @@ export default function Chat() {
       });
 
       setPositions(d_room);
+
+      const ro = await getRoomObjects();
+      setRoomObjects(ro);
     })();
 
     return () => events.close();
   }, []);
+
+  const sizeDict: Record<string, number> = {
+    lg: 120,
+    md: 80,
+    sm: 50,
+  };
 
   return (
     <div class="w-full">
       <Canvas
         positions={positions}
         messages={messages.value}
+        roomObjects={roomObjects}
         onClick={(e) => {
           const rect = (e.currentTarget as SVGSVGElement)
             .getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
 
+          setMyX(x);
+          setMyY(y);
+
           move(x, y, myColor);
         }}
       />
       <SendMessageForm />
+      {Object.entries(emojis).map(([size, emojiList]) => (
+        <div class="gap-2 py-4 justify-center">
+          {emojiList.map((emoji) => (
+            <button
+              class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+              onClick={() => {
+                addRoomObject(myX, myY, emoji, sizeDict[size]);
+              }}
+            >
+              <img src={emojiUrl(emoji)} class="w-12 h-12" />
+            </button>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
