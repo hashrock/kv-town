@@ -1,4 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
+import { BroadcastMessage } from "../../types.ts";
 import { getUserBySession } from "../../utils/auth_db.ts";
 import { addRoomObject, listRoomObject } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
@@ -16,8 +17,25 @@ export const handler: Handlers<Data, State> = {
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
+    const channel = new BroadcastChannel("chat");
+    const ts = Date.now();
     const body = await req.json();
     const { x, y, name } = body;
+
+    const message: BroadcastMessage = {
+      ts,
+      uid: user?.id ?? "anonymous",
+      username: user?.name ?? "anonymous",
+      payload: {
+        x: x,
+        y: y,
+        name: name,
+      },
+      type: "room_object",
+    };
+    channel.postMessage(message);
+    channel.close();
+
     const id = await addRoomObject(user.id, x, y, name);
     return new Response(JSON.stringify({ id }));
   },

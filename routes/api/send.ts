@@ -10,6 +10,9 @@ export const handler: Handlers<Data, State> = {
   async POST(req, ctx): Promise<Response> {
     const user = await getUserBySession(ctx.state.session ?? "");
     const msg = await req.json();
+    if (!user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     const body = msg["body"];
     if (typeof body !== "string") {

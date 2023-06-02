@@ -70,6 +70,10 @@ export default function Chat() {
         const payload = message.payload as Message;
         messages.value = [...messages.value, payload];
       }
+      if (message.type === "room_object") {
+        const payload = message.payload as RoomObject;
+        setRoomObjects((roomObjects) => [...roomObjects, payload]);
+      }
     });
 
     (async () => {
@@ -116,6 +120,9 @@ export default function Chat() {
             .getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
+
+          setMyX(x);
+          setMyY(y);
 
           move(x, y, myColor);
         }}
