@@ -3,6 +3,7 @@ import { Handlers } from "$fresh/server.ts";
 import { addMessage } from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 import { getUserBySession } from "../../utils/auth_db.ts";
+import { removeAllRoomObject } from "../../utils/db.ts";
 interface Data {
   user: User | null;
 }
@@ -17,6 +18,10 @@ export const handler: Handlers<Data, State> = {
     const body = msg["body"];
     if (typeof body !== "string") {
       return new Response("invalid body", { status: 400 });
+    }
+
+    if (body === "/clear") {
+      await removeAllRoomObject();
     }
 
     const channel = new BroadcastChannel("chat");

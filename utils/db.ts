@@ -89,6 +89,13 @@ export async function addRoomObject(
   return id;
 }
 
+export async function removeAllRoomObject() {
+  const iter = await kv.list<RoomObject>({ prefix: ["room_object"] });
+  for await (const item of iter) {
+    await kv.delete(["room_object", item.value.id]);
+  }
+}
+
 export interface RoomObject {
   id: string;
   uid: string;
