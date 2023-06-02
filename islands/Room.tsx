@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 import { Signal, useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 import { Position } from "../utils/db.ts";
@@ -19,35 +19,6 @@ export default function Chat() {
   const [myColor, setMyColor] = useState(randomColor());
 
   useEffect(() => {
-    fetch("/api/move", {
-      method: "POST",
-      body: JSON.stringify({
-        x: Math.floor(Math.random() * 1000) + 100,
-        y: Math.floor(Math.random() * 400) + 100,
-        color: myColor,
-      }),
-    });
-
-    fetch("/api/message").then((r) => r.json()).then((d_messages) => {
-      d_messages.reverse();
-      d_messages.forEach((message: Message) => {
-        messages.value = [...messages.value, message];
-      });
-    });
-
-    fetch("/api/room").then((r) => r.json()).then((d_room) => {
-      // remove expired positions
-      const now = Date.now();
-      Object.entries(d_room).forEach(([uid, position]) => {
-        const p = position as Position;
-        if (now - p.ts > expire) {
-          delete d_room[uid];
-        }
-      });
-
-      setPositions(d_room);
-    });
-
     const events = new EventSource("/api/listen");
     events.addEventListener(
       "open",
@@ -88,6 +59,38 @@ export default function Chat() {
         messages.value = [...messages.value, payload];
       }
     });
+
+    (async () => {
+      await fetch("/api/move", {
+        method: "POST",
+        body: JSON.stringify({
+          x: Math.floor(Math.random() * 1000) + 100,
+          y: Math.floor(Math.random() * 400) + 100,
+          color: myColor,
+        }),
+      });
+
+      await fetch("/api/message").then((r) => r.json()).then((d_messages) => {
+        d_messages.reverse();
+        d_messages.forEach((message: Message) => {
+          messages.value = [...messages.value, message];
+        });
+      });
+
+      await fetch("/api/room").then((r) => r.json()).then((d_room) => {
+        // remove expired positions
+        const now = Date.now();
+        Object.entries(d_room).forEach(([uid, position]) => {
+          const p = position as Position;
+          if (now - p.ts > expire) {
+            delete d_room[uid];
+          }
+        });
+
+        setPositions(d_room);
+      });
+    })();
+
     return () => events.close();
   }, []);
 
@@ -217,6 +220,10 @@ function Chara({ x, y, username, messages, uid, color }: CharaProps) {
     return () => cancelAnimationFrame(animationInterval.current);
   }, [animate]);
 
+  const currentMessage = messages.filter((message) => message.uid === uid)
+    .slice().reverse()
+    .shift();
+
   return (
     <g>
       <g ref={svgRef}>
@@ -253,31 +260,32 @@ function Chara({ x, y, username, messages, uid, color }: CharaProps) {
           color={color}
           isWalk={false}
         />
-        <rect
-          x={-100}
-          y={-160}
-          width={200}
-          height={60}
-          fill="rgba(253,253,253,0.8)"
-          rx={10}
-          ry={10}
-        />
-        <polygon
-          points="-10,-10 10,-10 0,10"
-          fill="rgba(253,253,253,0.8)"
-          transform={`translate(0, -90)`}
-        />
+        {currentMessage && (
+          <g>
+            <rect
+              x={-100}
+              y={-160}
+              width={200}
+              height={60}
+              fill="rgba(253,253,253,0.8)"
+              rx={10}
+              ry={10}
+            />
+            <polygon
+              points="-10,-10 10,-10 0,10"
+              fill="rgba(253,253,253,0.8)"
+              transform={`translate(0, -90)`}
+            />
 
-        <foreignObject x={-100} y={-160} width={200} height={60}>
-          {messages.filter((message) => message.uid === uid).slice().reverse()
-            .slice(0, 1).map((
-              message,
-            ) => (
-              <div class="flex justify-center items-center h-full p-4 text-center font-medium">
-                {message.body}
-              </div>
-            ))}
-        </foreignObject>
+            <foreignObject x={-100} y={-160} width={200} height={60}>
+              {
+                <div class="flex justify-center items-center h-full p-4 text-center font-medium">
+                  {currentMessage.body}
+                </div>
+              }
+            </foreignObject>
+          </g>
+        )}
       </g>
     </g>
   );
