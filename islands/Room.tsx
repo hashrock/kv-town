@@ -3,6 +3,8 @@ import { useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 import { Position } from "../utils/db.ts";
 import { Canvas } from "../components/Canvas.tsx";
+import { getRoomMessage, getRoomPositions, move } from "../utils/api.ts";
+import { randomColor, randomRange } from "../utils/room_utils.ts";
 
 enum ConnectionState {
   Connecting,
@@ -16,7 +18,7 @@ export default function Chat() {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
   const [positions, setPositions] = useState<Record<string, Position>>({});
-  const [myColor, setMyColor] = useState(randomColor());
+  const [myColor] = useState(randomColor());
 
   useEffect(() => {
     const events = new EventSource("/api/listen");
@@ -61,34 +63,25 @@ export default function Chat() {
     });
 
     (async () => {
-      await fetch("/api/move", {
-        method: "POST",
-        body: JSON.stringify({
-          x: Math.floor(Math.random() * 1000) + 100,
-          y: Math.floor(Math.random() * 400) + 100,
-          color: myColor,
-        }),
+      await move(
+        randomRange(100, 1100),
+        randomRange(100, 500),
+        myColor,
+      );
+      messages.value = [...messages.value, ...await getRoomMessage()];
+
+      const d_room = await getRoomPositions();
+
+      // remove expired positions
+      const now = Date.now();
+      Object.entries(d_room).forEach(([uid, position]) => {
+        const p = position as Position;
+        if (now - p.ts > expire) {
+          delete d_room[uid];
+        }
       });
 
-      await fetch("/api/message").then((r) => r.json()).then((d_messages) => {
-        d_messages.reverse();
-        d_messages.forEach((message: Message) => {
-          messages.value = [...messages.value, message];
-        });
-      });
-
-      await fetch("/api/room").then((r) => r.json()).then((d_room) => {
-        // remove expired positions
-        const now = Date.now();
-        Object.entries(d_room).forEach(([uid, position]) => {
-          const p = position as Position;
-          if (now - p.ts > expire) {
-            delete d_room[uid];
-          }
-        });
-
-        setPositions(d_room);
-      });
+      setPositions(d_room);
     })();
 
     return () => events.close();
@@ -104,23 +97,13 @@ export default function Chat() {
             .getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
-          fetch("/api/move", {
-            method: "POST",
-            body: JSON.stringify({
-              x,
-              y,
-              color: myColor,
-            }),
-          });
+
+          move(x, y, myColor);
         }}
       />
       <SendMessageForm />
     </div>
   );
-}
-
-function randomColor() {
-  return `hsl(${Math.floor(Math.random() * 360)}, 100%, 70%)`;
 }
 
 function SendMessageForm() {
