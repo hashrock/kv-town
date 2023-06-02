@@ -130,12 +130,12 @@ export default function Chat() {
       <SendMessageForm />
       <div>
         <button
-          class="bg-gray-900 text-white px-4 py-3 rounded"
+          class="bg-gray-700 hover:bg-gray-600 text-lg text-white px-4 py-3 rounded"
           onClick={() => {
             addRoomObject(myX, myY, "🌼");
           }}
         >
-          Hoge
+          🌼
         </button>
       </div>
     </div>
