@@ -5,6 +5,7 @@
  */
 
 import { Message } from "../types.ts";
+import { uuidv7 } from "https://esm.sh/uuidv7@0.4.3";
 
 const kv = await Deno.openKv();
 
@@ -29,7 +30,7 @@ export async function getMessage(id: string) {
 }
 
 export async function addMessage(uid: string, username: string, body: string) {
-  const id = crypto.randomUUID();
+  const id = uuidv7();
   const ts = Date.now();
   const message: Message = {
     id,
