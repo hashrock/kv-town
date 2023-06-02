@@ -47,6 +47,55 @@ export async function deleteMessage(ts: number) {
   await kv.delete(["message", ts]);
 }
 
+export async function listRoomObject() {
+  const iter = await kv.list<RoomObject>(
+    { prefix: ["room_object"] },
+    {
+      reverse: true,
+      limit: 100,
+    }
+  );
+  const roomObject: RoomObject[] = [];
+  for await (const item of iter) {
+    roomObject.push(item.value);
+  }
+  return roomObject;
+}
+
+export async function getRoomObject(id: string) {
+  const res = await kv.get<RoomObject>(["room_object", id]);
+  return res.value;
+}
+
+export async function addRoomObject(
+  uid: string,
+  x: number,
+  y: number,
+  name: string
+) {
+  const id = uuidv7();
+  const ts = Date.now();
+  const roomObject: RoomObject = {
+    id,
+    uid,
+    x,
+    y,
+    name,
+    ts,
+  };
+  await kv.set(["room_object", id], roomObject);
+  return id;
+}
+
+export interface RoomObject {
+  id: string;
+  uid: string;
+  x: number;
+  y: number;
+  name: string;
+  ts: number;
+}
+
 export interface Position {
   uid: string;
   x: number;

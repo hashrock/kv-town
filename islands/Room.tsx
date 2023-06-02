@@ -1,10 +1,12 @@
 import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
-import { Position } from "../utils/db.ts";
+import { Position, RoomObject } from "../utils/db.ts";
 import { Canvas } from "../components/Canvas.tsx";
 import {
+  addRoomObject,
   getRoomMessage,
+  getRoomObjects,
   getRoomPositions,
   move,
   sendMessage,
@@ -24,6 +26,9 @@ export default function Chat() {
   const messages = useSignal<Message[]>([]);
   const [positions, setPositions] = useState<Record<string, Position>>({});
   const [myColor] = useState(randomColor());
+  const [roomObjects, setRoomObjects] = useState<RoomObject[]>([]);
+  const [myX, setMyX] = useState(0);
+  const [myY, setMyY] = useState(0);
 
   useEffect(() => {
     const events = new EventSource("/api/listen");
@@ -68,9 +73,14 @@ export default function Chat() {
     });
 
     (async () => {
+      const mx = randomRange(100, 1100);
+      const my = randomRange(100, 500);
+      setMyX(mx);
+      setMyY(my);
+
       await move(
-        randomRange(100, 1100),
-        randomRange(100, 500),
+        mx,
+        my,
         myColor,
       );
       messages.value = [...messages.value, ...await getRoomMessage()];
@@ -87,6 +97,9 @@ export default function Chat() {
       });
 
       setPositions(d_room);
+
+      const ro = await getRoomObjects();
+      setRoomObjects(ro);
     })();
 
     return () => events.close();
@@ -97,6 +110,7 @@ export default function Chat() {
       <Canvas
         positions={positions}
         messages={messages.value}
+        roomObjects={roomObjects}
         onClick={(e) => {
           const rect = (e.currentTarget as SVGSVGElement)
             .getBoundingClientRect();
@@ -107,6 +121,16 @@ export default function Chat() {
         }}
       />
       <SendMessageForm />
+      <div>
+        <button
+          class="bg-gray-900 text-white px-4 py-3 rounded"
+          onClick={() => {
+            addRoomObject(myX, myY, "🌼");
+          }}
+        >
+          Hoge
+        </button>
+      </div>
     </div>
   );
 }
