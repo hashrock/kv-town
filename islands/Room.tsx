@@ -3,7 +3,12 @@ import { useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
 import { Position } from "../utils/db.ts";
 import { Canvas } from "../components/Canvas.tsx";
-import { getRoomMessage, getRoomPositions, move } from "../utils/api.ts";
+import {
+  getRoomMessage,
+  getRoomPositions,
+  move,
+  sendMessage,
+} from "../utils/api.ts";
 import { randomColor, randomRange } from "../utils/room_utils.ts";
 
 enum ConnectionState {
@@ -112,12 +117,8 @@ function SendMessageForm() {
   const onSubmit = (e: Event) => {
     e.preventDefault();
     if (message.value.length === 0) return;
-    fetch("/api/send", {
-      method: "POST",
-      body: JSON.stringify({
-        body: message.value,
-      }),
-    }).then(() => message.value = "");
+
+    sendMessage(message.value).then(() => message.value = "");
   };
 
   return (

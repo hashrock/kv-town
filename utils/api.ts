@@ -23,3 +23,12 @@ export function getRoomMessage() {
 export function getRoomPositions() {
   return fetch("/api/room").then((r) => r.json());
 }
+
+export function sendMessage(msg: string) {
+  return fetch("/api/send", {
+    method: "POST",
+    body: JSON.stringify({
+      body: msg,
+    }),
+  });
+}
