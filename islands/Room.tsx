@@ -142,21 +142,23 @@ export default function Chat() {
           move(x, y, myColor);
         }}
       />
-      <SendMessageForm />
-      {Object.entries(emojis).map(([size, emojiList]) => (
-        <div class="gap-2 py-4 justify-center">
-          {emojiList.map((emoji) => (
-            <button
-              class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
-              onClick={() => {
-                addRoomObject(myX, myY, emoji, sizeDict[size]);
-              }}
-            >
-              <img src={emojiUrl(emoji)} class="w-12 h-12" />
-            </button>
+      <div class="flex items-start gap-8 justify-start">
+        <div class="overflow-auto h-24">
+          {Object.entries(emojis).map(([size, emojiList]) => (
+            emojiList.map((emoji) => (
+              <button
+                class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+                onClick={() => {
+                  addRoomObject(myX, myY, emoji, sizeDict[size]);
+                }}
+              >
+                <img src={emojiUrl(emoji)} class="w-8 h-8" />
+              </button>
+            ))
           ))}
         </div>
-      ))}
+        <SendMessageForm />
+      </div>
     </div>
   );
 }
