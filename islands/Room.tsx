@@ -25,6 +25,7 @@ export enum ConnectionState {
   Connected,
   Disconnected,
 }
+import IconMessageCircle2 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/message-circle-2.tsx";
 
 const expire = 60000;
 const emojis = {
@@ -164,7 +165,7 @@ export default function Chat(props: { user: User }) {
   }
 
   return (
-    <div class="w-full">
+    <div class="w-full flex flex-col">
       <Canvas
         positions={positions}
         messages={messages.value}
@@ -189,8 +190,8 @@ export default function Chat(props: { user: User }) {
           deleteRoomObject(id);
         }}
       />
-      <div class="flex items-start gap-8 justify-start">
-        <div class="overflow-auto h-24">
+      <div class="flex flex-col md:flex-row gap-x-8 gap-y-2 justify-start">
+        <div class="overflow-auto h-16 md:h-24">
           {Object.entries(emojis).map(([size, emojiList]) => (
             emojiList.map((emoji) => (
               <button
@@ -199,7 +200,7 @@ export default function Chat(props: { user: User }) {
                   addRoomObject(myX, myY, emoji, sizeDict[size]);
                 }}
               >
-                <img src={emojiUrl(emoji)} class="w-8 h-8" />
+                <img src={emojiUrl(emoji)} class="w-6 h-6 md:w-8 md:h-8" />
               </button>
             ))
           ))}
@@ -228,8 +229,12 @@ function SendMessageForm() {
         value={message.value}
         onInput={(e) => message.value = e.currentTarget.value}
       />
-      <button type="Submit" class="bg-gray-900 text-white px-4 py-3 rounded">
-        Send Message
+      <button
+        type="Submit"
+        class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-3 rounded"
+      >
+        <IconMessageCircle2 class="w-8 h-8" />
+        Say
       </button>
     </form>
   );

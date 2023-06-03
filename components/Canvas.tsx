@@ -97,7 +97,7 @@ export function Canvas(
 
   return (
     <svg
-      class="w-full"
+      class="w-full h-full"
       width={1200}
       height={600}
       onClick={onClick}
