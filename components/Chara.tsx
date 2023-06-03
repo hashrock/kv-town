@@ -120,7 +120,9 @@ export function Chara({ x, y, username, messages, uid, color }: CharaProps) {
     return () => cancelAnimationFrame(animationInterval.current);
   }, [animate]);
 
-  const currentMessage = messages.filter((message) => message.uid === uid)
+  const currentMessage = messages.filter((message) =>
+    message.uid === uid && message.ts > Date.now() - 15000
+  )
     .slice().reverse()
     .shift();
 
