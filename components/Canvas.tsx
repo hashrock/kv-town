@@ -4,6 +4,7 @@ import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
 import { emojiUrl } from "../utils/room_utils.ts";
 import { useState } from "preact/hooks";
+import { ConnectionState } from "../islands/Room.tsx";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -56,10 +57,18 @@ interface DisplayObject {
 }
 
 export function Canvas(
-  { positions, onClick, messages, roomObjects, onClickRoomObject }: {
+  {
+    positions,
+    onClick,
+    messages,
+    roomObjects,
+    onClickRoomObject,
+    connectionState,
+  }: {
     positions: Record<string, Position>;
     roomObjects: RoomObject[];
     messages: Message[];
+    connectionState: ConnectionState;
     onClick: (e: MouseEvent) => void;
     onClickRoomObject: (id: string) => void;
   },
@@ -81,6 +90,10 @@ export function Canvas(
     };
   });
   const zSorted = characters.concat(ros).sort((a, b) => a.y - b.y);
+
+  const connectionColor = connectionState === ConnectionState.Connected
+    ? "#8F8"
+    : "#F88";
 
   return (
     <svg class="bg-white" width={1200} height={600} onClick={onClick}>
@@ -117,6 +130,26 @@ export function Canvas(
       })}
 
       <MessageBox messages={messages} transform="translate(0, 370)" />
+      <g transform="translate(20, 20)">
+        <circle fill={connectionColor} cx={0} cy={-2} r={4} />
+        (
+        <text
+          x={10}
+          y={0}
+          fill={connectionColor}
+          font-size="13"
+          font-family="sans-serif"
+          text-anchor="start"
+          alignment-baseline="middle"
+        >
+          {connectionState === ConnectionState.Connecting
+            ? "Connecting..."
+            : connectionState === ConnectionState.Connected
+            ? "OK"
+            : "Disconnected"}
+        </text>
+        )
+      </g>
     </svg>
   );
 }

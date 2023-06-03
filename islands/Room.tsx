@@ -20,7 +20,7 @@ import {
 } from "../utils/room_utils.ts";
 import * as emoji from "../utils/emoji.ts";
 import { User } from "../utils/types.ts";
-enum ConnectionState {
+export enum ConnectionState {
   Connecting,
   Connected,
   Disconnected,
@@ -158,6 +158,7 @@ export default function Chat(props: { user: User }) {
         positions={positions}
         messages={messages.value}
         roomObjects={roomObjects}
+        connectionState={connectionState.value}
         onClick={(e) => {
           const rect = (e.currentTarget as SVGSVGElement)
             .getBoundingClientRect();
