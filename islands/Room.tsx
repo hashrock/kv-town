@@ -152,6 +152,17 @@ export default function Chat(props: { user: User }) {
     sm: 50,
   };
 
+  function screenToSvg(
+    point: { x: number; y: number },
+    el: SVGGraphicsElement,
+    svg: SVGSVGElement,
+  ) {
+    const pt = svg.createSVGPoint();
+    pt.x = point.x;
+    pt.y = point.y;
+    return pt.matrixTransform(el?.getScreenCTM()?.inverse());
+  }
+
   return (
     <div class="w-full">
       <Canvas
@@ -162,8 +173,12 @@ export default function Chat(props: { user: User }) {
         onClick={(e) => {
           const rect = (e.currentTarget as SVGSVGElement)
             .getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
+
+          const { x, y } = screenToSvg(
+            { x: e.clientX, y: e.clientY },
+            e.currentTarget as SVGGraphicsElement,
+            e.currentTarget as SVGSVGElement,
+          );
 
           setMyX(x);
           setMyY(y);

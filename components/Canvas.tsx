@@ -96,7 +96,13 @@ export function Canvas(
     : "#F88";
 
   return (
-    <svg class="bg-white" width={1200} height={600} onClick={onClick}>
+    <svg
+      class="w-full"
+      width={1200}
+      height={600}
+      onClick={onClick}
+      viewBox="0 0 1200 600"
+    >
       <image href="/crop.png" x={-10} y={-10} width={1220} height={620} />
 
       {zSorted.map((i) => {
