@@ -18,6 +18,7 @@ import {
   randomRange,
 } from "../utils/room_utils.ts";
 import * as emoji from "../utils/emoji.ts";
+import { User } from "../utils/types.ts";
 enum ConnectionState {
   Connecting,
   Connected,
@@ -30,7 +31,7 @@ const emojis = {
   md: emoji.emoji_car,
   sm: [...emoji.emoji_flower, ...emoji.emoji_food],
 };
-export default function Chat() {
+export default function Chat(props: { user: User }) {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
   const [positions, setPositions] = useState<Record<string, Position>>({});
@@ -38,6 +39,20 @@ export default function Chat() {
   const [roomObjects, setRoomObjects] = useState<RoomObject[]>([]);
   const [myX, setMyX] = useState(0);
   const [myY, setMyY] = useState(0);
+  const myUid = props.user.id;
+
+  function moveMyself(x: number, y: number) {
+    const myPosition = positions[myUid];
+
+    setPositions((positions) => ({
+      ...positions,
+      [myUid]: {
+        ...myPosition,
+        x,
+        y,
+      },
+    }));
+  }
 
   useEffect(() => {
     const events = new EventSource("/api/listen");
@@ -70,6 +85,12 @@ export default function Chat() {
           ts: message.ts,
           color: payload.color,
         };
+
+        // ignore my position update message(echo)
+        if (message.uid === myUid) {
+          return;
+        }
+
         setPositions((positions) => ({
           ...positions,
           [message.uid]: item,
@@ -138,7 +159,7 @@ export default function Chat() {
 
           setMyX(x);
           setMyY(y);
-
+          moveMyself(x, y);
           move(x, y, myColor);
         }}
       />

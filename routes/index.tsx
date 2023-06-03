@@ -62,7 +62,7 @@ function SignedIn(props: SignedInData) {
     <>
       <div class="">
         <div>
-          <Room />
+          <Room user={props.user} />
         </div>
       </div>
     </>
