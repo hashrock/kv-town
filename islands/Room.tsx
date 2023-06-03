@@ -207,6 +207,14 @@ export default function Chat(props: { user: User }) {
         </div>
         <SendMessageForm />
       </div>
+      <div>
+        <a
+          href="https://github.com/hashrock/kv-town"
+          class={`text-gray-500 hover:text-gray-400 text-sm hover:underline`}
+        >
+          View on GitHub
+        </a>
+      </div>
     </div>
   );
 }

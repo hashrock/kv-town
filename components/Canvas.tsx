@@ -97,7 +97,7 @@ export function Canvas(
 
   return (
     <svg
-      class="w-full h-full"
+      class="w-full h-full cursor-crosshair"
       width={1200}
       height={600}
       onClick={onClick}
@@ -203,6 +203,7 @@ function RoomObjectEl(props: RoomObjectElProps) {
             height={32}
             fill="rgba(0, 0, 0, 0.5)"
             opacity={isConfirm ? 1 : 0.5}
+            class="cursor-pointer"
             rx={10}
             ry={10}
             onClick={(e) => {
