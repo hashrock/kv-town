@@ -2,8 +2,7 @@ import { Message } from "../types.ts";
 import { Position, RoomObject } from "../utils/db.ts";
 import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
-import twemoji from "https://esm.sh/twemoji@14.0.2";
-import { emojiUrl, emojiUrlCodePoint } from "../utils/room_utils.ts";
+import { emojiUrl } from "../utils/room_utils.ts";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -56,11 +55,12 @@ interface DisplayObject {
 }
 
 export function Canvas(
-  { positions, onClick, messages, roomObjects }: {
+  { positions, onClick, messages, roomObjects, onClickRoomObject }: {
     positions: Record<string, Position>;
     roomObjects: RoomObject[];
     messages: Message[];
     onClick: (e: MouseEvent) => void;
+    onClickRoomObject: (id: string) => void;
   },
 ) {
   const characters = Object.values(positions).slice().map(
@@ -112,6 +112,13 @@ export function Canvas(
                 y={i.roomObject.y - size / 2}
                 width={size}
                 height={size}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const id = i.roomObject?.id;
+                  if (id !== undefined) {
+                    onClickRoomObject(id);
+                  }
+                }}
               />
             </g>
           );

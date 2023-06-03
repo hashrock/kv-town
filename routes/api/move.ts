@@ -1,4 +1,4 @@
-import { BroadcastMessage, Message, MoveMesssage } from "../../types.ts";
+import { BroadcastMessage } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
 import { getUserBySession } from "../../utils/auth_db.ts";
 import { State, User } from "../../utils/types.ts";

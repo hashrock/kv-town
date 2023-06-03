@@ -96,6 +96,10 @@ export async function removeAllRoomObject() {
   }
 }
 
+export async function removeRoomObject(id: string) {
+  await kv.delete(["room_object", id]);
+}
+
 export interface RoomObject {
   id: string;
   uid: string;

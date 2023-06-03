@@ -1,10 +1,11 @@
 import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
-import { Position, RoomObject } from "../utils/db.ts";
+import { Position, removeAllRoomObject, RoomObject } from "../utils/db.ts";
 import { Canvas } from "../components/Canvas.tsx";
 import {
   addRoomObject,
+  deleteRoomObject,
   getRoomMessage,
   getRoomObjects,
   getRoomPositions,
@@ -104,6 +105,12 @@ export default function Chat(props: { user: User }) {
         const payload = message.payload as RoomObject;
         setRoomObjects((roomObjects) => [...roomObjects, payload]);
       }
+      if (message.type === "room_object_delete") {
+        const payload = message.payload as RoomObject;
+        setRoomObjects((roomObjects) =>
+          roomObjects.filter((ro) => ro.id !== payload.id)
+        );
+      }
     });
 
     (async () => {
@@ -161,6 +168,12 @@ export default function Chat(props: { user: User }) {
           setMyY(y);
           moveMyself(x, y);
           move(x, y, myColor);
+        }}
+        onClickRoomObject={(id) => {
+          deleteRoomObject(id);
+          // setRoomObjects((roomObjects) =>
+          //   roomObjects.filter((ro) => ro.id !== id)
+          // );
         }}
       />
       <div class="flex items-start gap-8 justify-start">

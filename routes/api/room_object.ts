@@ -1,7 +1,11 @@
 import { Handlers } from "$fresh/server.ts";
 import { BroadcastMessage } from "../../types.ts";
 import { getUserBySession } from "../../utils/auth_db.ts";
-import { addRoomObject, listRoomObject } from "../../utils/db.ts";
+import {
+  addRoomObject,
+  listRoomObject,
+  removeRoomObject,
+} from "../../utils/db.ts";
 import { State, User } from "../../utils/types.ts";
 interface Data {
   user: User | null;
@@ -38,6 +42,30 @@ export const handler: Handlers<Data, State> = {
     channel.close();
 
     const id = await addRoomObject(user.id, x, y, name, size);
+    return new Response(JSON.stringify({ id }));
+  },
+  async DELETE(req, ctx): Promise<Response> {
+    const user = await getUserBySession(ctx.state.session ?? "");
+    if (!user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const channel = new BroadcastChannel("chat");
+    const body = await req.json();
+    const { id } = body;
+    const message: BroadcastMessage = {
+      ts: Date.now(),
+      uid: user?.id ?? "anonymous",
+      username: user?.name ?? "anonymous",
+      payload: {
+        id: id,
+      },
+      type: "room_object_delete",
+    };
+    channel.postMessage(message);
+    channel.close();
+
+    await removeRoomObject(id);
+
     return new Response(JSON.stringify({ id }));
   },
 };

@@ -53,3 +53,12 @@ export function addRoomObject(
 export function getRoomObjects() {
   return fetch("/api/room_object").then((r) => r.json());
 }
+
+export function deleteRoomObject(id: string) {
+  return fetch("/api/room_object", {
+    method: "DELETE",
+    body: JSON.stringify({
+      id,
+    }),
+  });
+}
