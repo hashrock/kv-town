@@ -73,7 +73,9 @@ export function Chara({ x, y, username, messages, uid, color }: CharaProps) {
   }, [x, y, x1, y1, x2, y2]);
 
   const animationInterval = useRef(0);
-  const [walkTimer, setWalkTimer] = useState(0);
+  const [lastIndexChanged, setLastIndexChanged] = useState(0);
+  const animationDuration = 100;
+
   function easeOutSine(x: number): number {
     return Math.sin((x * Math.PI) / 2);
   }
@@ -108,9 +110,9 @@ export function Chara({ x, y, username, messages, uid, color }: CharaProps) {
       setRotation(0);
     }
 
-    if (ts - walkTimer > 100 && isWalk) {
+    if (ts - lastIndexChanged > animationDuration && isWalk) {
       setFrame((frame) => (frame + 1) % 4);
-      setWalkTimer((t) => t + 100);
+      setLastIndexChanged((t) => ts - (ts % animationDuration));
     }
 
     animationInterval.current = requestAnimationFrame(animate);
