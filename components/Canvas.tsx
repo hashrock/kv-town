@@ -3,6 +3,7 @@ import { Position, RoomObject } from "../utils/db.ts";
 import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
 import { emojiUrl } from "../utils/room_utils.ts";
+import { useState } from "preact/hooks";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -104,23 +105,11 @@ export function Canvas(
           const url = emojiUrl(i.roomObject.name);
           const size = i === undefined ? 25 : i.roomObject.size;
           return (
-            <g>
-              <image
-                key={i.roomObject.id}
-                href={url}
-                x={i.roomObject.x - size / 2}
-                y={i.roomObject.y - size / 2}
-                width={size}
-                height={size}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const id = i.roomObject?.id;
-                  if (id !== undefined) {
-                    onClickRoomObject(id);
-                  }
-                }}
-              />
-            </g>
+            <RoomObjectEl
+              key={i.roomObject.id}
+              roomObject={i.roomObject}
+              onDelete={onClickRoomObject}
+            />
           );
         }
 
@@ -129,5 +118,79 @@ export function Canvas(
 
       <MessageBox messages={messages} transform="translate(0, 370)" />
     </svg>
+  );
+}
+
+interface RoomObjectElProps extends JSX.SVGAttributes<SVGGElement> {
+  roomObject: RoomObject;
+  onDelete: (id: string) => void;
+}
+function RoomObjectEl(props: RoomObjectElProps) {
+  const { roomObject, onDelete } = props;
+  const url = emojiUrl(roomObject.name);
+  const size = roomObject.size;
+  const [hover, setHover] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+
+  return (
+    <g
+      key={roomObject.id}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <image
+        key={roomObject.id}
+        href={url}
+        x={roomObject.x - size / 2}
+        y={roomObject.y - size / 2}
+        width={size}
+        height={size}
+      />
+      {hover && (
+        <g>
+          <rect
+            x={roomObject.x - size / 2}
+            y={roomObject.y - size / 2}
+            width={size}
+            height={size}
+            fill="rgba(0, 0, 0, 0.1)"
+            rx={10}
+            ry={10}
+          />
+          <rect
+            x={roomObject.x - 100 / 2}
+            y={roomObject.y - 32 / 2}
+            width={100}
+            height={32}
+            fill="rgba(0, 0, 0, 0.5)"
+            opacity={isConfirm ? 1 : 0.5}
+            rx={10}
+            ry={10}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isConfirm) {
+                onDelete(roomObject.id);
+                setIsConfirm(false);
+              } else {
+                setIsConfirm(true);
+              }
+            }}
+          >
+          </rect>
+
+          <text
+            x={roomObject.x}
+            y={roomObject.y}
+            fill="white"
+            font-size="13"
+            text-anchor="middle"
+            alignment-baseline="middle"
+            class="pointer-events-none select-none"
+          >
+            {isConfirm ? "OK?" : "Remove"}
+          </text>
+        </g>
+      )}
+    </g>
   );
 }

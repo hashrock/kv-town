@@ -171,9 +171,6 @@ export default function Chat(props: { user: User }) {
         }}
         onClickRoomObject={(id) => {
           deleteRoomObject(id);
-          // setRoomObjects((roomObjects) =>
-          //   roomObjects.filter((ro) => ro.id !== id)
-          // );
         }}
       />
       <div class="flex items-start gap-8 justify-start">

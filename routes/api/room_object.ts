@@ -21,10 +21,12 @@ export const handler: Handlers<Data, State> = {
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
-    const channel = new BroadcastChannel("chat");
-    const ts = Date.now();
     const body = await req.json();
     const { x, y, name, size } = body;
+    const id = await addRoomObject(user.id, x, y, name, size);
+
+    const channel = new BroadcastChannel("chat");
+    const ts = Date.now();
 
     const message: BroadcastMessage = {
       ts,
@@ -35,13 +37,13 @@ export const handler: Handlers<Data, State> = {
         y: y,
         name: name,
         size: size,
+        id: id,
       },
       type: "room_object",
     };
     channel.postMessage(message);
     channel.close();
 
-    const id = await addRoomObject(user.id, x, y, name, size);
     return new Response(JSON.stringify({ id }));
   },
   async DELETE(req, ctx): Promise<Response> {
