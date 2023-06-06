@@ -195,7 +195,7 @@ export default function Chat(props: { user: User }) {
           {Object.entries(emojis).map(([size, emojiList]) => (
             emojiList.map((emoji) => (
               <button
-                class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+                class="bg-green-100 hover:bg-green-300 px-2 py-1 rounded"
                 onClick={() => {
                   addRoomObject(myX, myY, emoji, sizeDict[size]);
                 }}
@@ -239,7 +239,7 @@ function SendMessageForm() {
       />
       <button
         type="Submit"
-        class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-3 rounded"
+        class="bg-green-700 hover:bg-green-500 text-white px-4 py-3 rounded"
       >
         <IconMessageCircle2 class="w-8 h-8" />
         Say

@@ -34,7 +34,7 @@ export default function Home(props: PageProps<Data>) {
       <Head>
         <title>KV Town</title>
       </Head>
-      <body class="bg-gray-900">
+      <body class="bg-green-200">
         <div class="px-4 py-8 mx-auto max-w-screen-xl">
           <Header user={props.data?.user ?? null} />
           {props.data ? <SignedIn {...props.data} /> : <SignedOut />}

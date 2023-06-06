@@ -27,7 +27,7 @@ function MessageBox({ messages, transform }: MessageBoxProps) {
         y={0}
         width={width}
         height={height}
-        fill="rgba(0, 0, 0, 0.5)"
+        fill="rgba(0, 100, 100, 0.5)"
         rx={10}
         ry={10}
       />
@@ -97,13 +97,13 @@ export function Canvas(
 
   return (
     <svg
-      class="w-full h-full cursor-crosshair"
+      class="w-full h-full cursor-crosshair rounded-xl border-2 border-green-400"
       width={1200}
       height={600}
       onClick={onClick}
       viewBox="0 0 1200 600"
     >
-      <image href="/crop.png" x={-10} y={-10} width={1220} height={620} />
+      <image href="/crop3.png" x={-10} y={-10} width={1220} height={620} />
 
       {zSorted.map((i) => {
         if (i.position) {
