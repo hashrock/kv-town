@@ -5,6 +5,7 @@ import { JSX } from "preact";
 import { emojiUrl } from "../utils/room_utils.ts";
 import { useState } from "preact/hooks";
 import { ConnectionState } from "../islands/Room.tsx";
+import { objectImages } from "🛠️/objects.ts";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -27,7 +28,7 @@ function MessageBox({ messages, transform }: MessageBoxProps) {
         y={0}
         width={width}
         height={height}
-        fill="rgba(0, 0, 0, 0.5)"
+        fill="rgba(0, 100, 100, 0.5)"
         rx={10}
         ry={10}
       />
@@ -97,13 +98,13 @@ export function Canvas(
 
   return (
     <svg
-      class="w-full h-full cursor-crosshair"
+      class="w-full h-full cursor-crosshair rounded-xl border-2 border-green-400"
       width={1200}
       height={600}
       onClick={onClick}
       viewBox="0 0 1200 600"
     >
-      <image href="/crop.png" x={-10} y={-10} width={1220} height={620} />
+      <image href="/crop3.png" x={-10} y={-10} width={1220} height={620} />
 
       {zSorted.map((i) => {
         if (i.position) {
@@ -166,10 +167,16 @@ interface RoomObjectElProps extends JSX.SVGAttributes<SVGGElement> {
 }
 function RoomObjectEl(props: RoomObjectElProps) {
   const { roomObject, onDelete } = props;
-  const url = emojiUrl(roomObject.name);
   const size = roomObject.size;
   const [hover, setHover] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+
+  const isContainedImageList = objectImages.map((i) => i.name).includes(
+    roomObject.name,
+  );
+  const url = isContainedImageList
+    ? `obj/${roomObject.name}.png`
+    : emojiUrl(roomObject.name);
 
   return (
     <g

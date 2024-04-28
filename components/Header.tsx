@@ -6,7 +6,7 @@ const linkClass = "text-sm text-blue-500 hover:underline";
 export function Header(props: { user: User | null }) {
   return (
     <>
-      <div class="flex justify-between items-center text-gray-200 mb-2">
+      <div class="flex justify-between items-center text-green-500 mb-2">
         <a href="/" class="flex gap-2">
           <IconHome class="w-7 h-7" />
           <h1 class="text-2xl font-bold">

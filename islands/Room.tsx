@@ -12,13 +12,7 @@ import {
   move,
   sendMessage,
 } from "../utils/api.ts";
-import {
-  emojiUrl,
-  emojiUrlCodePoint,
-  randomColor,
-  randomRange,
-} from "../utils/room_utils.ts";
-import * as emoji from "../utils/emoji.ts";
+import { randomColor, randomRange } from "../utils/room_utils.ts";
 import { User } from "../utils/types.ts";
 export enum ConnectionState {
   Connecting,
@@ -26,13 +20,10 @@ export enum ConnectionState {
   Disconnected,
 }
 import IconMessageCircle2 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/message-circle-2.tsx";
+import { objectImages } from "🛠️/objects.ts";
 
 const expire = 60000;
-const emojis = {
-  lg: emoji.emoji_building,
-  md: emoji.emoji_car,
-  sm: [...emoji.emoji_flower, ...emoji.emoji_food],
-};
+
 export default function Chat(props: { user: User }) {
   const connectionState = useSignal(ConnectionState.Disconnected);
   const messages = useSignal<Message[]>([]);
@@ -192,17 +183,15 @@ export default function Chat(props: { user: User }) {
       />
       <div class="flex flex-col md:flex-row gap-x-8 gap-y-2 justify-start">
         <div class="overflow-auto h-16 md:h-24">
-          {Object.entries(emojis).map(([size, emojiList]) => (
-            emojiList.map((emoji) => (
-              <button
-                class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
-                onClick={() => {
-                  addRoomObject(myX, myY, emoji, sizeDict[size]);
-                }}
-              >
-                <img src={emojiUrl(emoji)} class="w-6 h-6 md:w-8 md:h-8" />
-              </button>
-            ))
+          {objectImages.map((img) => (
+            <button
+              class="bg-green-100 hover:bg-green-300 px-2 py-1 rounded"
+              onClick={() => {
+                addRoomObject(myX, myY, img.name, sizeDict[img.size]);
+              }}
+            >
+              <img src={`/obj/${img.name}.png`} class="w-6 h-6 md:w-8 md:h-8" />
+            </button>
           ))}
         </div>
         <SendMessageForm />
@@ -239,7 +228,7 @@ function SendMessageForm() {
       />
       <button
         type="Submit"
-        class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-3 rounded"
+        class="bg-green-700 hover:bg-green-500 text-white px-4 py-3 rounded"
       >
         <IconMessageCircle2 class="w-8 h-8" />
         Say
