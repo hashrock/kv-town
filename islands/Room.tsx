@@ -27,6 +27,16 @@ export enum ConnectionState {
 }
 import IconMessageCircle2 from "https://deno.land/x/tabler_icons_tsx@0.0.3/tsx/message-circle-2.tsx";
 
+export const objectImages = [
+  "building",
+  "bus",
+  "car",
+  "house1",
+  "house2",
+  "plant",
+  "well",
+];
+
 const expire = 60000;
 const emojis = {
   lg: emoji.emoji_building,
@@ -192,6 +202,17 @@ export default function Chat(props: { user: User }) {
       />
       <div class="flex flex-col md:flex-row gap-x-8 gap-y-2 justify-start">
         <div class="overflow-auto h-16 md:h-24">
+          {objectImages.map((img) => (
+            <button
+              class="bg-green-100 hover:bg-green-300 px-2 py-1 rounded"
+              onClick={() => {
+                addRoomObject(myX, myY, img, 100);
+              }}
+            >
+              <img src={`/obj/${img}.png`} class="w-6 h-6 md:w-8 md:h-8" />
+            </button>
+          ))}
+
           {Object.entries(emojis).map(([size, emojiList]) => (
             emojiList.map((emoji) => (
               <button

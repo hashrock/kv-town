@@ -4,7 +4,7 @@ import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
 import { emojiUrl } from "../utils/room_utils.ts";
 import { useState } from "preact/hooks";
-import { ConnectionState } from "../islands/Room.tsx";
+import { ConnectionState, objectImages } from "../islands/Room.tsx";
 
 interface MessageBoxProps extends JSX.SVGAttributes<SVGGElement> {
   messages: Message[];
@@ -166,10 +166,14 @@ interface RoomObjectElProps extends JSX.SVGAttributes<SVGGElement> {
 }
 function RoomObjectEl(props: RoomObjectElProps) {
   const { roomObject, onDelete } = props;
-  const url = emojiUrl(roomObject.name);
   const size = roomObject.size;
   const [hover, setHover] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+
+  const isContainedImageList = objectImages.includes(roomObject.name);
+  const url = isContainedImageList
+    ? `obj/${roomObject.name}.png`
+    : emojiUrl(roomObject.name);
 
   return (
     <g
