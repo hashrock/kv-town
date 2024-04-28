@@ -1,4 +1,3 @@
-import "$std/dotenv/load.ts";
 import { OAuth2Client } from "https://deno.land/x/oauth2_client@v1.0.0/mod.ts";
 
 export const oauth2Client = new OAuth2Client({
