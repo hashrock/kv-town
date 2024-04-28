@@ -2,7 +2,6 @@ import { Message } from "../types.ts";
 import { Position, RoomObject } from "../utils/db.ts";
 import { Chara } from "../components/Chara.tsx";
 import { JSX } from "preact";
-import { emojiUrl } from "../utils/room_utils.ts";
 import { useState } from "preact/hooks";
 import { ConnectionState } from "../islands/Room.tsx";
 import { objectImages } from "🛠️/objects.ts";
@@ -122,8 +121,6 @@ export function Canvas(
         }
 
         if (i.roomObject) {
-          const url = emojiUrl(i.roomObject.name);
-          const size = i === undefined ? 25 : i.roomObject.size;
           return (
             <RoomObjectEl
               key={i.roomObject.id}
