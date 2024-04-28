@@ -1,10 +1,10 @@
-import { MiddlewareHandlerContext } from "$fresh/server.ts";
+import { FreshContext } from "$fresh/server.ts";
 import { getCookies } from "$std/http/cookie.ts";
 import { State } from "🛠️/types.ts";
 
 export async function handler(
   req: Request,
-  ctx: MiddlewareHandlerContext<State>,
+  ctx: FreshContext<State>,
 ) {
   const url = new URL(req.url);
   if (url.pathname === "") return await ctx.next();
