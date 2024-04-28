@@ -1,4 +1,4 @@
-import { BroadcastMessage, Message, MoveMesssage } from "../types.ts";
+import { Message } from "../types.ts";
 
 export function move(x: number, y: number, color: string) {
   return fetch("/api/move", {
@@ -37,7 +37,7 @@ export function addRoomObject(
   x: number,
   y: number,
   name: string,
-  size: number
+  size: number,
 ) {
   return fetch("/api/room_object", {
     method: "POST",

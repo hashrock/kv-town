@@ -51,6 +51,8 @@ export const handler: Handlers<Data, State> = {
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    // TODO Objectの削除をどうwatchでやる？
     const channel = new BroadcastChannel("chat");
     const body = await req.json();
     const { id } = body;

@@ -24,6 +24,7 @@ export const handler: Handlers<Data, State> = {
       await removeAllRoomObject();
     }
 
+    // TODO チャットの同期はwatchでやる
     const channel = new BroadcastChannel("chat");
     const payload = {
       id: crypto.randomUUID(),

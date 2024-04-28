@@ -44,19 +44,6 @@ export default function Home(props: PageProps<Data>) {
   );
 }
 
-function LinkButton(
-  props: JSX.HTMLAttributes<HTMLAnchorElement>,
-) {
-  return (
-    <a
-      {...props}
-      class={`inline-block cursor-pointer px-3 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 ${
-        props.class ?? ""
-      }`}
-    />
-  );
-}
-
 function SignedIn(props: SignedInData) {
   return (
     <>

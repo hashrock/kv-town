@@ -1,4 +1,3 @@
-import { BroadcastMessage } from "../../types.ts";
 import { Handlers } from "$fresh/server.ts";
 import { getUserBySession } from "../../utils/auth_db.ts";
 import { State, User } from "../../utils/types.ts";
@@ -25,21 +24,7 @@ export const handler: Handlers<Data, State> = {
       return new Response("invalid body", { status: 400 });
     }
 
-    const channel = new BroadcastChannel("chat");
-
     const ts = Date.now();
-
-    const message: BroadcastMessage = {
-      ts,
-      uid: user?.id ?? "anonymous",
-      username: user?.name ?? "anonymous",
-      payload: {
-        x: x,
-        y: y,
-        color: color,
-      },
-      type: "move",
-    };
 
     updatePosition({
       uid: user?.id ?? "anonymous",
@@ -49,9 +34,6 @@ export const handler: Handlers<Data, State> = {
       username: user?.name ?? "anonymous",
       color,
     });
-
-    channel.postMessage(message);
-    channel.close();
 
     return new Response("message sent");
   },

@@ -1,1 +1,4 @@
 - Use Mapchip: https://scrabling.itch.io/pixel-isometric-tiles
+- 完璧をめざさないぞ
+- とりあえず見た目を整えるぞ
+- kv.watchを使って、チャット、objects、座標の同期をきっちりやるぞ
